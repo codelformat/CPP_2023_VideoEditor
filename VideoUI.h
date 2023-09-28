@@ -21,6 +21,9 @@ public slots:
     // 设置过滤器
     void Set();
 
+    //导出视频
+    void Export();
+
 private:
     Ui::VideoUIClass ui;
 };

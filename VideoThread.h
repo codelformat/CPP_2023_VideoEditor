@@ -27,6 +27,13 @@ public:
 	bool Seek(int frame);
 	bool Seek(double pos);
 
+	// 暂只支持H264格式
+	// 开始保存视频
+	bool StartSave(const std::string filename, int width = 0, int height = 0);
+
+	// 停止保存视频，写入视频帧的索引
+	bool StopSave();
+
 	~VideoThread();
 
 	// 线程入口函数
@@ -40,6 +47,9 @@ signals:
 	void ViewDes(cv::Mat mat);
 protected:
 	QMutex mutex;
+
+	//是否开始写视频
+	bool isWrite = false;
 	VideoThread();
 };
 

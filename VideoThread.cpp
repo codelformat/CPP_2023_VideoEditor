@@ -74,13 +74,15 @@ void VideoThread::run()
 		// 显示生成后图像
 		ViewDes(des);
 		// 发太快 卡死
-		mutex.unlock();
+		
 		//msleep(40);
 		// 
 		int s = 0;
 		s = 1000 / fps;
+		mutex.unlock();
 		msleep(s);
 		// 先释放再等待刷新
+		
 	}
 }
 
@@ -104,6 +106,19 @@ bool VideoThread::Seek(double pos) {
 VideoThread::VideoThread()
 {
 	start();
+}
+
+// 暂只支持H264格式
+	// 开始保存视频
+bool VideoThread::StartSave(const std::string filename, int width, int height) {
+	cout << "Start Exporting" << endl;
+	return true;
+}
+
+// 停止保存视频，写入视频帧的索引
+bool VideoThread::StopSave() {
+	cout << "Stop Exporting" << endl;
+	return true;
 }
 
 VideoThread::~VideoThread() {

@@ -86,5 +86,27 @@ void VideoUI::Set()
 	}
 }
 
+void VideoUI::Export() {
+    static bool isExport = false; //后续要改
+    if (isExport) {
+        // 停止导出
+        VideoThread::Get()->StopSave();
+        isExport = false;
+        ui.exportButton->setText("Start Exporting");
+        return;
+    }
+    // 开始导出
+    QString name = QFileDialog::getSaveFileName(this, "Save", "out.avi"); // 先不考虑格式
+    if (name.isEmpty()) return;
+    std::string filename = name.toLocal8Bit().data();
+
+    if (VideoThread::Get()->StartSave(filename))
+    {
+        isExport = true;
+        ui.exportButton->setText("Stop Exporting");
+        return;
+    }
+}
+
 VideoUI::~VideoUI()
 {}
