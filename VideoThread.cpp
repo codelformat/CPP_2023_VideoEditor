@@ -26,7 +26,7 @@ double VideoThread::GetPos() {
 	mutex.unlock();
 	return pos;
 }
-
+//
 
 //打开一号视频源文件
 bool VideoThread::Open(const std::string file) {
