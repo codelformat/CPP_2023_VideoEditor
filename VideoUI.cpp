@@ -15,8 +15,8 @@ VideoUI::VideoUI(QWidget *parent)
 
     // 注册新类型
     qRegisterMetaType<cv::Mat>("cv::Mat");
-    //输入视频
-    //信号槽关联
+    // 输入视频
+    // 信号槽关联
     QObject::connect(VideoThread::Get(),//信号源
         SIGNAL(ViewImage1(cv::Mat)),//信号
         ui.src1,
