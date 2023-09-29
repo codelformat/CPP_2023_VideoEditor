@@ -11,6 +11,9 @@ using namespace std;
 static VideoCapture cap1;
 static bool isExit = false;
 
+// 保存视频
+static VideoWriter vw;
+
 // 返回当前播放的位置
 double VideoThread::GetPos() {
 	double pos = 0;
@@ -62,25 +65,40 @@ void VideoThread::run()
 		// 读取一帧视频，解码并作颜色转换，在read中均做了
 		if (!cap1.read(mat1) || mat1.empty())
 		{
+			
 			mutex.unlock();//尽晚调用，尽早退出
+			// 导出到结尾位置， 停止导出
+			if(isWrite)
+			{
+				StopSave();
+				SaveEnd();
+			}
 			msleep(5);
 			continue;
 		}
 		// 显示图像1
-		ViewImage1(mat1);
+		if(!isWrite)
+			ViewImage1(mat1);
 
 		Mat des = VideoFilter::Get()->Filter(mat1, Mat());
 
 		// 显示生成后图像
-		ViewDes(des);
+		if(!isWrite)
+			ViewDes(des);
+		int s = 0;
+		s = 1000 / fps;
+		if (isWrite) {
+			s = 1;
+			vw.write(des);
+		}
 		// 发太快 卡死
 		
 		//msleep(40);
 		// 
-		int s = 0;
-		s = 1000 / fps;
+		
 		mutex.unlock();
-		msleep(s);
+		if(!isWrite)
+			msleep(s);
 		// 先释放再等待刷新
 		
 	}
@@ -112,12 +130,42 @@ VideoThread::VideoThread()
 	// 开始保存视频
 bool VideoThread::StartSave(const std::string filename, int width, int height) {
 	cout << "Start Exporting" << endl;
+	Seek(0);
+	mutex.lock();
+	if (!cap1.isOpened()) {
+		mutex.unlock();
+		return false;
+	}
+	if (width <= 0) {
+		width = cap1.get(CAP_PROP_FRAME_WIDTH);
+	}
+
+	if (height <= 0) {
+		height = cap1.get(CAP_PROP_FRAME_HEIGHT);
+	}
+	vw.open(filename,
+		VideoWriter::fourcc('M', 'P', '4', '2'),
+		this->fps,
+		Size(width, height)
+		);
+	if (!vw.isOpened()) {
+		mutex.unlock();
+		cout << "VideoWriter open failed." << endl;
+		return false;
+	}
+	this->isWrite = true;
+
+	mutex.unlock();
 	return true;
 }
 
 // 停止保存视频，写入视频帧的索引
 bool VideoThread::StopSave() {
 	cout << "Stop Exporting" << endl;
+	mutex.lock();
+	vw.release();
+	isWrite = false;
+	mutex.unlock();
 	return true;
 }
 

@@ -45,6 +45,7 @@ signals:
 
 	// 显示生成后图像
 	void ViewDes(cv::Mat mat);
+	void SaveEnd();
 protected:
 	QMutex mutex;
 

@@ -6,6 +6,7 @@
 #include "VideoFilter.h"
 using namespace std;
 static bool pressSlider = false;
+static bool isExport = false;
 
 VideoUI::VideoUI(QWidget *parent)
     : QWidget(parent)
@@ -23,7 +24,7 @@ VideoUI::VideoUI(QWidget *parent)
         SLOT(SetImage(cv::Mat))//槽函数
     );
 
-    // 输出视频
+    // 导出视频结束
     //信号槽关联
     QObject::connect(VideoThread::Get(),//信号源
         SIGNAL(ViewDes(cv::Mat)),//信号
@@ -31,6 +32,11 @@ VideoUI::VideoUI(QWidget *parent)
         SLOT(SetImage(cv::Mat))//槽函数
     );
 
+    QObject::connect(VideoThread::Get(),//信号源
+        SIGNAL(SaveEnd()),//信号
+        this,
+        SLOT(ExportEnd())//槽函数
+        );
 
     startTimer(40); // 可根据fps设置定时器的时间
 }
@@ -87,12 +93,11 @@ void VideoUI::Set()
 }
 
 void VideoUI::Export() {
-    static bool isExport = false; //后续要改
     if (isExport) {
         // 停止导出
         VideoThread::Get()->StopSave();
         isExport = false;
-        ui.exportButton->setText("Start Exporting");
+        ui.exportButton->setText("Export");
         return;
     }
     // 开始导出
@@ -103,9 +108,15 @@ void VideoUI::Export() {
     if (VideoThread::Get()->StartSave(filename))
     {
         isExport = true;
-        ui.exportButton->setText("Stop Exporting");
+        ui.exportButton->setText("Stop");
         return;
     }
+}
+
+void VideoUI::ExportEnd() {
+    isExport = false;
+    //QString name = "Export";
+    ui.exportButton->setText("Export");
 }
 
 VideoUI::~VideoUI()

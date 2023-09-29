@@ -24,6 +24,9 @@ public slots:
     //导出视频
     void Export();
 
+    //导出视频结束
+    void ExportEnd();
+
 private:
     Ui::VideoUIClass ui;
 };
