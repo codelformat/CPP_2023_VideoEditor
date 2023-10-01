@@ -19,15 +19,16 @@ VideoWidget::VideoWidget(QWidget* p) : QOpenGLWidget(p) {
 void VideoWidget::SetImage(cv::Mat mat) {
 	QImage::Format fmt = QImage::Format_RGB888;
 	int pixSize = 3;
-	 //灰度图格式CV_8UC1
-	if (mat.type() == CV_8UC1) {
+	 //灰度图格式CV_8UC2
+	if (mat.type() == CV_8UC2) {
 		fmt = QImage::Format_Grayscale16;
 		pixSize = 2; // 灰度图像素大小
 	}
-	if (img.isNull() ) {
+	if (img.isNull() || img.format()!=fmt) {
 		delete img.bits();
-		uchar* buf = new uchar[width() * height() * pixSize]; //灰度为1，彩色为3
+		uchar* buf = new uchar[width() * height() * pixSize]; //灰度为2，彩色为3
 		img = QImage(buf, width(), height(), fmt);
+		std::cout << width() << " " << height() << std::endl;
 	}
 	//给MAT缩放
 	Mat des;
