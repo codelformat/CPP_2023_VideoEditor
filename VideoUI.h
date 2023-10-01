@@ -13,6 +13,9 @@ public:
     ~VideoUI();
 public slots:
     void Open();
+    void Play();
+    void Pause();
+
     void SlidePress();
     void SlideRelease();
 

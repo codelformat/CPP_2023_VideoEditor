@@ -15,6 +15,27 @@ public:
 	*/
 	void Gain(double bright, double contrast);
 
+	void Rotate90();
+	void Rotate180();
+	void Rotate270();
+
+	void FlipX();
+	void FlipY();
+	void FlipXY();
+
+	//Í¼Ïñ³ß´ç
+	void Resize(int width, int height);
+
+	//Í¼Ïñ½ð×ÖËþ
+	void PyDown(int count);
+	void PyUp(int count);
+
+	//ÊÓÆµ»­Ãæ²Ã¼ô
+	void Clip(int x, int y, int w, int h);
+
+	// ×ª»Ò¶ÈÍ¼
+	void Gray();
+
 	ImageProcess();
 	~ImageProcess();
 private:

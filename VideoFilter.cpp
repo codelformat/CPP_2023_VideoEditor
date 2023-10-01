@@ -17,6 +17,39 @@ public:
 				// 亮度对比度调整
 				p.Gain(tasks[i].para[0], tasks[i].para[1]);
 				break;
+			case TASK_ROTATE90:
+				p.Rotate90();
+				break;
+			case TASK_ROTATE180:
+				p.Rotate180();
+				break;
+			case TASK_ROTATE270:
+				p.Rotate270();
+				break;
+			case TASK_FLIPX:
+				p.FlipX();
+				break;
+			case TASK_FLIPY:
+				p.FlipY();
+				break;
+			case TASK_FILPXY:
+				p.FlipXY();
+				break;
+			case TASK_RESIZE:
+				p.Resize(tasks[i].para[0], tasks[i].para[1]);
+				break;
+			case TASK_PYDOWN:
+				p.PyDown(tasks[i].para[0]);
+				break;
+			case TASK_PYUP:
+				p.PyUp(tasks[i].para[0]);
+				break;
+			case TASK_CLIP:
+				p.Clip(tasks[i].para[0], tasks[i].para[1], tasks[i].para[2], tasks[i].para[3]);
+				break;
+			case TASK_GRAY:
+				p.Gray();
+				break;
 			default:
 				break;
 			}

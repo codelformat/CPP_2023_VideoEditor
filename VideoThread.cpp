@@ -41,6 +41,8 @@ bool VideoThread::Open(const std::string file) {
 	if (!re) {
 		return re;
 	}
+	width = cap1.get(CAP_PROP_FRAME_WIDTH);
+	height = cap1.get(CAP_PROP_FRAME_HEIGHT);
 	fps = cap1.get(CAP_PROP_FPS);
 	if (fps <= 0) fps = 25;
 	return re;
@@ -58,6 +60,12 @@ void VideoThread::run()
 
 		// 判断视频是否打开
 		if (!cap1.isOpened()) {
+			mutex.unlock();
+			msleep(5);
+			continue;
+		}
+
+		if (!isPlay) {
 			mutex.unlock();
 			msleep(5);
 			continue;
@@ -104,6 +112,10 @@ void VideoThread::run()
 	}
 }
 
+bool VideoThread::isThreadOpen(){
+	return cap1.isOpened();
+}
+
 bool VideoThread::Seek(int frame) {
 	mutex.lock();
 	if (!cap1.isOpened()) {
@@ -128,7 +140,7 @@ VideoThread::VideoThread()
 
 // 暂只支持H264格式
 	// 开始保存视频
-bool VideoThread::StartSave(const std::string filename, int width, int height) {
+bool VideoThread::StartSave(const std::string filename, int width, int height, bool isColor) {
 	cout << "Start Exporting" << endl;
 	Seek(0);
 	mutex.lock();
@@ -146,7 +158,8 @@ bool VideoThread::StartSave(const std::string filename, int width, int height) {
 	vw.open(filename,
 		VideoWriter::fourcc('M', 'P', '4', '2'),
 		this->fps,
-		Size(width, height)
+		Size(width, height),
+		isColor
 		);
 	if (!vw.isOpened()) {
 		mutex.unlock();

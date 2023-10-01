@@ -1,4 +1,8 @@
 <RCC>
-    <qresource prefix="VideoUI">
-    </qresource>
+  <qresource prefix="VideoUI">
+    <file>Resources/pauseN.png</file>
+    <file>Resources/pauseP.png</file>
+    <file>Resources/playN.png</file>
+    <file>Resources/playP.png</file>
+  </qresource>
 </RCC>

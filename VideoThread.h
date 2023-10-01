@@ -9,6 +9,8 @@ class VideoThread:public QThread
     
 public:
 	int fps = 0;
+	int width = 0;
+	int height = 0;
 
 	//单件模式 获取对象
 	static VideoThread* Get() {
@@ -17,6 +19,18 @@ public:
 	}
 	//打开一号视频源文件
 	bool Open(const std::string file);
+	void Play() { 
+		mutex.lock();
+		isPlay = true; 
+		mutex.unlock();
+	};
+	void Pause() { 
+		mutex.lock();
+		isPlay = false;
+		mutex.unlock();
+	};
+
+	bool isThreadOpen();
 	// 返回当前播放的位置
 	double GetPos();
 
@@ -29,7 +43,7 @@ public:
 
 	// 暂只支持H264格式
 	// 开始保存视频
-	bool StartSave(const std::string filename, int width = 0, int height = 0);
+	bool StartSave(const std::string filename, int width = 0, int height = 0, bool isColor = true);
 
 	// 停止保存视频，写入视频帧的索引
 	bool StopSave();
@@ -48,9 +62,10 @@ signals:
 	void SaveEnd();
 protected:
 	QMutex mutex;
-
+	
 	//是否开始写视频
 	bool isWrite = false;
+	bool isPlay = false;
 	VideoThread();
 };
 

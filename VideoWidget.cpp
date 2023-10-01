@@ -17,14 +17,23 @@ VideoWidget::VideoWidget(QWidget* p) : QOpenGLWidget(p) {
 
 // 信号槽函数
 void VideoWidget::SetImage(cv::Mat mat) {
-	if (img.isNull()) {
-		uchar* buf = new uchar[width() * height() * 3]; //灰度为1，彩色为3
-		img = QImage(buf, width(), height(),QImage::Format_RGB888);
+	QImage::Format fmt = QImage::Format_RGB888;
+	int pixSize = 3;
+	 //灰度图格式CV_8UC1
+	if (mat.type() == CV_8UC1) {
+		fmt = QImage::Format_Grayscale16;
+		pixSize = 2; // 灰度图像素大小
+	}
+	if (img.isNull() ) {
+		delete img.bits();
+		uchar* buf = new uchar[width() * height() * pixSize]; //灰度为1，彩色为3
+		img = QImage(buf, width(), height(), fmt);
 	}
 	//给MAT缩放
 	Mat des;
 	cv::resize(mat, des, cv::Size(img.size().width(), img.size().height()));
-	cv::cvtColor(des, des, COLOR_BGR2RGB);
+	if(pixSize == 3)
+		cv::cvtColor(des, des, COLOR_BGR2RGB); //为RGB时，做BGR转RGB
 	memcpy(img.bits(), des.data, des.cols * des.rows * des.elemSize());
 	update();//界面刷新
 }

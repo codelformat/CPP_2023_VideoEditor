@@ -7,6 +7,7 @@
 using namespace std;
 static bool pressSlider = false;
 static bool isExport = false;
+static bool isColor = true;
 
 VideoUI::VideoUI(QWidget *parent)
     : QWidget(parent)
@@ -37,6 +38,7 @@ VideoUI::VideoUI(QWidget *parent)
         this,
         SLOT(ExportEnd())//槽函数
         );
+    ui.pauseButton->hide();
 
     startTimer(40); // 可根据fps设置定时器的时间
 }
@@ -62,8 +64,26 @@ void VideoUI::Open()
         QMessageBox::information(this, "error", name+" open failed");
         return;
     }
-    // QMessageBox::information(this, "", name);
+    else {
+        Play();
+    }
 
+}
+
+void VideoUI::Play() {
+    if(VideoThread::Get()->isThreadOpen())
+    {
+        ui.pauseButton->show();
+        ui.pauseButton->setGeometry(ui.playButton->geometry());
+        VideoThread::Get()->Play();
+        ui.playButton->hide();
+    }
+}
+
+void VideoUI::Pause() {
+    ui.playButton->show();
+    VideoThread::Get()->Pause();
+    ui.pauseButton->hide();
 }
 
 void VideoUI::SlidePress()
@@ -83,13 +103,103 @@ void VideoUI::SetPos(int pos)
 
 void VideoUI::Set()
 {
+    isColor = true;
     VideoFilter::Get()->Clear();
+    // 视频图像裁剪
+    bool isClip = false;
+    int cx = ui.cx->value();
+    int cy = ui.cy->value();
+    int cw = ui.cw->value();
+    int ch = ui.ch->value();
+    if (cx + cy + cw + ch > 0)
+    {
+        isClip = true;
+
+        VideoFilter::Get()->Add(Task{ TASK_CLIP, {(double)cx, (double)cy, (double)cw, (double)ch} });
+
+        double w = VideoThread::Get()->width;
+        double h = VideoThread::Get()->height;
+        VideoFilter::Get()->Add(Task{ TASK_RESIZE, {w, h} });
+    }
+    
+
+    // 图像金字塔
+    bool isPy = false;
+    int down = ui.pydown->value();
+    int up = ui.pyup->value();
+    if (down > 0) {
+        isPy = true;
+		VideoFilter::Get()->Add(Task{ TASK_PYDOWN, {(double)down, (double)up} });
+        int w = VideoThread::Get()->width;
+        int h = VideoThread::Get()->height;
+        for (int i = 0; i < down; i++)
+        {
+			w /= 2;
+            h /= 2;
+		}
+        ui.width->setValue(w);
+		ui.height->setValue(h);
+    }
+    if (up > 0) {
+        isPy = true;
+        VideoFilter::Get()->Add(Task{ TASK_PYUP, {(double)down, (double)up} });
+        int w = VideoThread::Get()->width;
+        int h = VideoThread::Get()->height;
+        for (int i = 0; i < up; i++)
+        {
+			w *= 2;
+			h *= 2;
+		}
+        ui.width->setValue(w);
+        ui.height->setValue(h);
+    }
+
+
+    // 调整视频尺寸
+    double w = ui.width->value();
+    double h = ui.height->value();
+    if (!isClip && !isPy && w > 0 && h > 0) {
+        VideoFilter::Get()->Add(Task{ TASK_RESIZE, {w, h}});
+    }
+
+
 	// 设置对比度和亮度
     if (ui.bright->value() > 0 || 
         ui.contrast->value() > 1) {
         VideoFilter::Get()->Add(Task{ TASK_GAIN, 
             {(double)ui.bright->value(), ui.contrast->value()} });
 	}
+
+    // 灰度图
+    if (ui.color->currentIndex() == 1) {
+        VideoFilter::Get()->Add(Task{ TASK_GRAY });
+        isColor = false;
+    }
+
+    //图像旋转 1:90,2:180,3:270
+    if (ui.rotate->currentIndex() == 1) {
+        VideoFilter::Get()->Add(Task{ TASK_ROTATE90 });
+    }
+    else if (ui.rotate->currentIndex() == 2) {
+		VideoFilter::Get()->Add(Task{ TASK_ROTATE180 });
+    }
+    else if (ui.rotate->currentIndex() == 3) {
+		VideoFilter::Get()->Add(Task{ TASK_ROTATE270 });
+    }
+
+    //图像镜像 1:x,2:y,3:xy
+    if (ui.flip->currentIndex() == 1) {
+        VideoFilter::Get()->Add(Task{ TASK_FLIPX });
+    }
+    else if (ui.flip->currentIndex() == 2) {
+        VideoFilter::Get()->Add(Task{ TASK_FLIPY });
+    }
+    else if (ui.flip->currentIndex() == 3) {
+        VideoFilter::Get()->Add(Task{ TASK_FILPXY });
+    }
+
+    // 调整视频尺寸
+
 }
 
 void VideoUI::Export() {
@@ -104,8 +214,10 @@ void VideoUI::Export() {
     QString name = QFileDialog::getSaveFileName(this, "Save", "out.avi"); // 先不考虑格式
     if (name.isEmpty()) return;
     std::string filename = name.toLocal8Bit().data();
+    int w = ui.width->value();
+    int h = ui.height->value();
 
-    if (VideoThread::Get()->StartSave(filename))
+    if (VideoThread::Get()->StartSave(filename,w,h, isColor))
     {
         isExport = true;
         ui.exportButton->setText("Stop");
