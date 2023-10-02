@@ -84,6 +84,20 @@ void ImageProcess::Gray() {
 	cvtColor(des, des, COLOR_BGR2GRAY);
 }
 
+// 水印
+void ImageProcess::Mark(int x, int y, double a) {
+	if(des.empty()) return;
+	if (src2.empty()) return;
+	if (x < 0 || y < 0) return;
+
+	/*
+	// 还未考虑图片大小大于视频分辨率的情况
+	*/
+	Mat roi = des(Rect(x, y, src2.cols, src2.rows));
+	addWeighted(src2, a, roi, 1 - a, 0, roi);
+
+}
+
 ImageProcess::ImageProcess() {
 }
 

@@ -50,6 +50,9 @@ public:
 			case TASK_GRAY:
 				p.Gray();
 				break;
+			case TASK_MASK:
+				p.Mark(tasks[i].para[0], tasks[i].para[1], tasks[i].para[2]);
+				break;
 			default:
 				break;
 			}

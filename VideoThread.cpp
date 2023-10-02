@@ -45,6 +45,9 @@ bool VideoThread::Open(const std::string file) {
 	height = cap1.get(CAP_PROP_FRAME_HEIGHT);
 	fps = cap1.get(CAP_PROP_FPS);
 	if (fps <= 0) fps = 25;
+	srcFile = file;
+	double count = cap1.get(CAP_PROP_FRAME_COUNT);
+	totalMs = (count / (double)fps) * 1000;
 	return re;
 }
 void VideoThread::run()
@@ -70,8 +73,11 @@ void VideoThread::run()
 			msleep(5);
 			continue;
 		}
+
+		int cur = cap1.get(CAP_PROP_POS_FRAMES);
+
 		// 读取一帧视频，解码并作颜色转换，在read中均做了
-		if (!cap1.read(mat1) || mat1.empty())
+		if (cur >= end || !cap1.read(mat1) || mat1.empty())
 		{
 			
 			mutex.unlock();//尽晚调用，尽早退出
@@ -88,7 +94,8 @@ void VideoThread::run()
 		if(!isWrite)
 			ViewImage1(mat1);
 
-		Mat des = VideoFilter::Get()->Filter(mat1, Mat());
+		Mat mat2 = mark;
+		Mat des = VideoFilter::Get()->Filter(mat1, mat2);
 
 		// 显示生成后图像
 		if(!isWrite)
@@ -114,6 +121,22 @@ void VideoThread::run()
 
 bool VideoThread::isThreadOpen(){
 	return cap1.isOpened();
+}
+
+void VideoThread::SetBegin(double p) {
+	mutex.lock();
+	double count = cap1.get(CAP_PROP_FRAME_COUNT);
+	int frame = p * count;
+	begin = frame;
+	mutex.unlock();
+}
+
+void VideoThread::SetEnd(double p) {
+	mutex.lock();
+	double count = cap1.get(CAP_PROP_FRAME_COUNT);
+	int frame = p * count;
+	end = frame;
+	mutex.unlock();
 }
 
 bool VideoThread::Seek(int frame) {
@@ -142,7 +165,7 @@ VideoThread::VideoThread()
 	// 开始保存视频
 bool VideoThread::StartSave(const std::string filename, int width, int height, bool isColor) {
 	cout << "Start Exporting" << endl;
-	Seek(0);
+	Seek(begin);
 	mutex.lock();
 	if (!cap1.isOpened()) {
 		mutex.unlock();
@@ -167,7 +190,7 @@ bool VideoThread::StartSave(const std::string filename, int width, int height, b
 		return false;
 	}
 	this->isWrite = true;
-
+	desFile = filename;
 	mutex.unlock();
 	return true;
 }

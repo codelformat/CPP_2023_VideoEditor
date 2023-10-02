@@ -36,6 +36,9 @@ public:
 	// 转灰度图
 	void Gray();
 
+	// 加水印
+	void Mark(int x, int y, double a);
+
 	ImageProcess();
 	~ImageProcess();
 private:

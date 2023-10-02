@@ -2,12 +2,18 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <string>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <QtCore/QFile>
 #include "VideoThread.h"
 #include "VideoFilter.h"
+#include "AudioThread.h"
 using namespace std;
 static bool pressSlider = false;
 static bool isExport = false;
 static bool isColor = true;
+static bool isMark = false;
 
 VideoUI::VideoUI(QWidget *parent)
     : QWidget(parent)
@@ -99,6 +105,15 @@ void VideoUI::SlideRelease()
 void VideoUI::SetPos(int pos)
 {
 	VideoThread::Get()->Seek((double)pos / 1000.);
+}
+
+void VideoUI::Left(int pos) {
+    VideoThread::Get()->SetBegin((double)pos / 1000.);
+    SetPos(pos);
+
+}
+void VideoUI::Right(int pos) {
+    VideoThread::Get()->SetEnd((double)pos / 1000.);
 }
 
 void VideoUI::Set()
@@ -198,7 +213,13 @@ void VideoUI::Set()
         VideoFilter::Get()->Add(Task{ TASK_FILPXY });
     }
 
-    // 调整视频尺寸
+    // 添加水印
+    if (isMark) {
+        double x = ui.mx->value();
+        double y = ui.my->value();
+        double a = ui.ma->value();
+        VideoFilter::Get()->Add(Task{ TASK_MASK, {x, y, a} });
+    }
 
 }
 
@@ -229,6 +250,35 @@ void VideoUI::ExportEnd() {
     isExport = false;
     //QString name = "Export";
     ui.exportButton->setText("Export");
+    string src = VideoThread::Get()->srcFile;
+    string des = VideoThread::Get()->desFile;
+    int ss = 0;
+    int t = 0;
+    ss = VideoThread::Get()->totalMs * ((double)ui.left->value() / 1000.);
+    t = VideoThread::Get()->totalMs * ((double)ui.right->value() / 1000.) - ss;
+
+    // 处理音频
+    AudioThread::Get()->ExportAudio(src, src + ".mp3", ss, t);
+    string tmp = des + ".avi";
+
+    QFile::remove(tmp.c_str());
+    QFile::rename(des.c_str(), tmp.c_str());
+    AudioThread::Get()->Merge(tmp, src+".mp3", des);
+
+}
+
+void VideoUI::Mark() {
+    isMark = false;
+    QString name = QFileDialog::getOpenFileName(this, "Select Image：");
+    if (name.isEmpty()) {
+        return;
+    }
+    std::string file = name.toLocal8Bit().data();
+    cv::Mat mark = cv::imread(file);
+    if (mark.empty()) return;
+
+    VideoThread::Get()->SetMark(mark);
+    isMark = true;
 }
 
 VideoUI::~VideoUI()

@@ -11,6 +11,17 @@ public:
 	int fps = 0;
 	int width = 0;
 	int height = 0;
+	int totalMs = 0;
+
+	std::string srcFile;
+	std::string desFile;
+
+	int begin = 0;
+	int end = 999;
+
+	void SetBegin(double p);
+
+	void SetEnd(double p);
 
 	//单件模式 获取对象
 	static VideoThread* Get() {
@@ -48,6 +59,14 @@ public:
 	// 停止保存视频，写入视频帧的索引
 	bool StopSave();
 
+	// 添加水印
+	void SetMark(cv::Mat mark) {
+		mutex.lock();
+		this->mark = mark;
+
+		mutex.unlock();
+	}
+
 	~VideoThread();
 
 	// 线程入口函数
@@ -66,6 +85,7 @@ protected:
 	//是否开始写视频
 	bool isWrite = false;
 	bool isPlay = false;
+	cv::Mat mark;
 	VideoThread();
 };
 

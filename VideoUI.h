@@ -21,6 +21,9 @@ public slots:
 
     // 滑动条拖动
     void SetPos(int);
+    void Left(int pos);
+    void Right(int pos);
+
     // 设置过滤器
     void Set();
 
@@ -29,6 +32,11 @@ public slots:
 
     //导出视频结束
     void ExportEnd();
+
+    // 添加水印按下
+    void Mark();
+
+
 
 private:
     Ui::VideoUIClass ui;
