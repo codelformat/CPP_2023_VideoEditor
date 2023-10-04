@@ -19,7 +19,7 @@ VideoUI::VideoUI(QWidget *parent)
     : QWidget(parent)
 {
     ui.setupUi(this);
-    setWindowFlags(Qt::FramelessWindowHint);
+    //setWindowFlags(Qt::FramelessWindowHint);
 
     // ×¢²áĞÂÀàĞÍ
     qRegisterMetaType<cv::Mat>("cv::Mat");
