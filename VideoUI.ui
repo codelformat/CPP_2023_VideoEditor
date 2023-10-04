@@ -833,5 +833,6 @@ border-radius: 5px;
   <slot>Mark()</slot>
   <slot>Left(int)</slot>
   <slot>Right(int)</slot>
+  <slot>SetRight(int)</slot>
  </slots>
 </ui>

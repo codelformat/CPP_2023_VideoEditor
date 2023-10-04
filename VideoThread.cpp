@@ -24,7 +24,7 @@ double VideoThread::GetPos() {
 	}
 	double count = cap1.get(CAP_PROP_FRAME_COUNT);
 	double cur = cap1.get(CAP_PROP_POS_FRAMES);
-	if(count > 0.001)
+	if (count > 0.001)
 		pos = cur / count;
 	mutex.unlock();
 	return pos;
@@ -47,6 +47,12 @@ bool VideoThread::Open(const std::string file) {
 	if (fps <= 0) fps = 25;
 	srcFile = file;
 	double count = cap1.get(CAP_PROP_FRAME_COUNT);
+
+	// 设置结尾指针位置
+	
+	/*int frame = 0.999 * count;
+	this->end = frame;*/
+
 	totalMs = (count / (double)fps) * 1000;
 	return re;
 }
@@ -80,9 +86,10 @@ void VideoThread::run()
 		if (cur >= end || !cap1.read(mat1) || mat1.empty())
 		{
 			
+
 			mutex.unlock();//尽晚调用，尽早退出
 			// 导出到结尾位置， 停止导出
-			if(isWrite)
+			if (isWrite)
 			{
 				StopSave();
 				SaveEnd();
@@ -91,14 +98,14 @@ void VideoThread::run()
 			continue;
 		}
 		// 显示图像1
-		if(!isWrite)
+		if (!isWrite)
 			ViewImage1(mat1);
 
 		Mat mat2 = mark;
 		Mat des = VideoFilter::Get()->Filter(mat1, mat2);
 
 		// 显示生成后图像
-		if(!isWrite)
+		if (!isWrite)
 			ViewDes(des);
 		int s = 0;
 		s = 1000 / fps;
@@ -107,19 +114,19 @@ void VideoThread::run()
 			vw.write(des);
 		}
 		// 发太快 卡死
-		
+
 		//msleep(40);
 		// 
-		
+
 		mutex.unlock();
-		if(!isWrite)
+		if (!isWrite)
 			msleep(s);
 		// 先释放再等待刷新
-		
+
 	}
 }
 
-bool VideoThread::isThreadOpen(){
+bool VideoThread::isThreadOpen() {
 	return cap1.isOpened();
 }
 
@@ -183,7 +190,7 @@ bool VideoThread::StartSave(const std::string filename, int width, int height, b
 		this->fps,
 		Size(width, height),
 		isColor
-		);
+	);
 	if (!vw.isOpened()) {
 		mutex.unlock();
 		cout << "VideoWriter open failed." << endl;

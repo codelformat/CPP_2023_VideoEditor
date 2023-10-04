@@ -1,6 +1,7 @@
 #include "VideoUI.h"
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
+#include <iostream>
 #include <string>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
@@ -19,7 +20,7 @@ VideoUI::VideoUI(QWidget *parent)
     : QWidget(parent)
 {
     ui.setupUi(this);
-    setWindowFlags(Qt::FramelessWindowHint);
+    //setWindowFlags(Qt::FramelessWindowHint);
 
     // ×¢²áÐÂÀàÐÍ
     qRegisterMetaType<cv::Mat>("cv::Mat");
@@ -81,6 +82,8 @@ void VideoUI::Play() {
     {
         ui.pauseButton->show();
         ui.pauseButton->setGeometry(ui.playButton->geometry());
+        this->Right(999);
+        this->Left(0);
         VideoThread::Get()->Play();
         ui.playButton->hide();
     }
@@ -113,6 +116,7 @@ void VideoUI::Left(int pos) {
 
 }
 void VideoUI::Right(int pos) {
+    cout << "Set end!" << " " << (double)pos / 1000. << endl;
     VideoThread::Get()->SetEnd((double)pos / 1000.);
 }
 
