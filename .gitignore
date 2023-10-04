@@ -9,6 +9,10 @@
 *.vcxproj
 *.filters
 *.user
+
+#Qt creator project file
+*.pro
+
 # User-specific files
 *.rsuser
 *.suo
