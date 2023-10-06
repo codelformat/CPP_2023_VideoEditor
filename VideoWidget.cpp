@@ -26,9 +26,11 @@ void VideoWidget::SetImage(cv::Mat mat) {
 	}
 	if (img.isNull() || img.format()!=fmt) {
 		delete img.bits();
-		uchar* buf = new uchar[width() * height() * pixSize]; //灰度为2，彩色为3
-		img = QImage(buf, width(), height(), fmt);
-		std::cout << width() << " " << height() << std::endl;
+		int realWidth = width(); //TODO
+		int realHeight = height(); // TODO
+		uchar* buf = new uchar[realWidth * realHeight * pixSize]; //灰度为2，彩色为3
+		img = QImage(buf, realWidth, realHeight, fmt);
+		std::cout << realWidth << " " << realHeight << std::endl;
 	}
 	//给MAT缩放
 	Mat des;
