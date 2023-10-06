@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1706</width>
-    <height>960</height>
+    <width>992</width>
+    <height>643</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>990</width>
+    <height>640</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>VideoUI</string>
@@ -17,36 +29,47 @@
    <string notr="true">
 QPushButton:!hover
 {
-  background-color: qlineargradient(spread:pad, x1:0,y1:0,x2:0,y2:1, stop:0 rgba(120,120,120,255), stop:0.495 rgba(39,39,39,255), stop:0.505 rgba(39,39,39,255),stop:1 rgba(120,120,120,255));
+ 
+
+	
+	/*background-color: rgb(65, 105, 225);*/
+	
+	
+	
+	/*background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 103, 250, 255), stop:1 rgba(25, 192, 255, 255));*/
+	background-color: rgb(30, 144, 255);
 border: none;
-border-radius: 5px;
+border-radius: 3px;
 color: rgb(255, 255,255);
-font:75 12pt &quot;Microsoft YaHei UI&quot;;
+font:75 12pt &quot;Microsoft YaHei&quot;;
 }
 QPushButton:hover
 {
-    background-color: qlineargradient(spread:pad, x1:0,y1:0,x2:0,y2:1, stop:0 rgba(39,39,39,255), stop:0.495 rgba(120,120,120,255), stop:0.505 rgba(120,120,120,255),stop:1 rgba(39,39,39,255));
-    border: none;
-border-radius: 5px;
+	
+	
+	background-color: rgb(0, 191, 255);
+	   border: none;
+border-radius: 3px;
 color: rgb(255, 255,255);
-font:75 12pt &quot;Microsoft YaHei UI&quot;
+font:75 12pt &quot;Microsoft YaHei&quot;;
 }
 #VideoUIClass
 {
-	background-color: rgb(53, 53, 53);
+	background-color: rgb(255, 255,255);
 }
 
 #closeButton
 {
-background-color: rgb(53, 53, 53);
-font:75 11pt &quot;等线&quot;;
+
+	background-color: rgb(255, 90, 7);
+font:75 11pt &quot;Microsoft Yahei&quot;;
 color:rgb(255, 255,255);
 }
 
 QLabel
 {
-    color:rgb(255,255,255);
-	font: 10pt &quot;Microsoft YaHei UI&quot;;
+    color:rgb(0,0,0);
+	font: 10pt &quot;Microsoft YaHei&quot;;
 }
 
 #playButton:!hover
@@ -88,533 +111,653 @@ QLabel
 
 </string>
   </property>
-  <widget class="QPushButton" name="closeButton">
-   <property name="geometry">
-    <rect>
-     <x>1660</x>
-     <y>0</y>
-     <width>41</width>
-     <height>21</height>
-    </rect>
+  <layout class="QVBoxLayout" name="verticalLayout_4">
+   <property name="leftMargin">
+    <number>12</number>
    </property>
-   <property name="styleSheet">
-    <string notr="true">font: 75 11pt &quot;等线&quot;;
-backgroundcolor: rgb(255, 255, 255);</string>
-   </property>
-   <property name="text">
-    <string>X</string>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="VideoWidget" name="src1">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>40</y>
-     <width>800</width>
-     <height>600</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="openButton">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>0</y>
-     <width>75</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>打开</string>
-   </property>
-  </widget>
-  <widget class="QSlider" name="playSlider">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>670</y>
-     <width>801</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>999</number>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>560</x>
-     <y>740</y>
-     <width>71</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>亮度[0-100]</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>770</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>对比度[1.0-3.0]</string>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="bright">
-   <property name="geometry">
-    <rect>
-     <x>650</x>
-     <y>740</y>
-     <width>91</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QDoubleSpinBox" name="contrast">
-   <property name="geometry">
-    <rect>
-     <x>650</x>
-     <y>770</y>
-     <width>91</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="minimum">
-    <double>1.000000000000000</double>
-   </property>
-   <property name="maximum">
-    <double>3.000000000000000</double>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="setButton">
-   <property name="geometry">
-    <rect>
-     <x>820</x>
-     <y>690</y>
-     <width>71</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>设置</string>
-   </property>
-  </widget>
-  <widget class="VideoWidget" name="des">
-   <property name="geometry">
-    <rect>
-     <x>890</x>
-     <y>40</y>
-     <width>800</width>
-     <height>600</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="exportButton">
-   <property name="geometry">
-    <rect>
-     <x>110</x>
-     <y>0</y>
-     <width>75</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>导出</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="playButton">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>730</y>
-     <width>41</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pauseButton">
-   <property name="geometry">
-    <rect>
-     <x>430</x>
-     <y>730</y>
-     <width>41</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>550</x>
-     <y>800</y>
-     <width>71</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>图像旋转</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="rotate">
-   <property name="geometry">
-    <rect>
-     <x>640</x>
-     <y>800</y>
-     <width>91</width>
-     <height>22</height>
-    </rect>
+   <property name="rightMargin">
+    <number>12</number>
    </property>
    <item>
-    <property name="text">
-     <string>0</string>
-    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_11">
+     <item>
+      <widget class="QPushButton" name="setButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>设置</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="openButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>打开</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="exportButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>导出</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::MinimumExpanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>700</width>
+         <height>5</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="closeButton">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 11pt &quot;等线&quot;;
+backgroundcolor: rgb(0, 0, 255);</string>
+       </property>
+       <property name="text">
+        <string>X</string>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
-    <property name="text">
-     <string>90</string>
-    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_13">
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="VideoWidget" name="src1">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>480</width>
+         <height>360</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>100000</width>
+         <height>10000</height>
+        </size>
+       </property>
+       <property name="sizeIncrement">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="VideoWidget" name="des">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>480</width>
+         <height>360</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>100000</width>
+         <height>100000</height>
+        </size>
+       </property>
+       <property name="sizeIncrement">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
-    <property name="text">
-     <string>180</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>270</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QComboBox" name="flip">
-   <property name="geometry">
-    <rect>
-     <x>640</x>
-     <y>830</y>
-     <width>91</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>无</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>垂直镜像</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>水平镜像</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>上下左右镜像</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>830</y>
-     <width>71</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>图像镜像</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>860</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>图像尺寸W,H</string>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="width">
-   <property name="geometry">
-    <rect>
-     <x>640</x>
-     <y>870</y>
-     <width>91</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>5000</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="height">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
-     <y>870</y>
-     <width>91</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>5000</number>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>550</x>
-     <y>890</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>图像金字塔</string>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="pydown">
-   <property name="geometry">
-    <rect>
-     <x>640</x>
-     <y>900</y>
-     <width>91</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>100</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="pyup">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
-     <y>900</y>
-     <width>91</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>100</number>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_7">
-   <property name="geometry">
-    <rect>
-     <x>500</x>
-     <y>920</y>
-     <width>141</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>图像裁剪（x,y,w,h)</string>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="cx">
-   <property name="geometry">
-    <rect>
-     <x>630</x>
-     <y>930</y>
-     <width>61</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>6000</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="cy">
-   <property name="geometry">
-    <rect>
-     <x>690</x>
-     <y>930</y>
-     <width>61</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>6000</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="cw">
-   <property name="geometry">
-    <rect>
-     <x>750</x>
-     <y>930</y>
-     <width>61</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>6000</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="ch">
-   <property name="geometry">
-    <rect>
-     <x>810</x>
-     <y>930</y>
-     <width>61</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>6000</number>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="color">
-   <property name="geometry">
-    <rect>
-     <x>780</x>
-     <y>820</y>
-     <width>91</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>RGB</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>灰度图</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QPushButton" name="pushButton">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>780</y>
-     <width>101</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>水印x,y,alpha</string>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="my">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>790</y>
-     <width>61</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>6000</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="mx">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>790</y>
-     <width>61</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>6000</number>
-   </property>
-  </widget>
-  <widget class="QDoubleSpinBox" name="ma">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>790</y>
-     <width>62</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <double>1.000000000000000</double>
-   </property>
-   <property name="singleStep">
-    <double>0.010000000000000</double>
-   </property>
-   <property name="value">
-    <double>1.000000000000000</double>
-   </property>
-  </widget>
-  <widget class="QSlider" name="left">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>640</y>
-     <width>801</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QSlider::handle:horizontal {
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="spacing">
+      <number>4</number>
+     </property>
+     <item>
+      <widget class="QSlider" name="left">
+       <property name="styleSheet">
+        <string notr="true">QSlider::handle:horizontal {
 background: rgb(0, 170, 255);
 border-radius: 5px;
 }</string>
-   </property>
-   <property name="maximum">
-    <number>999</number>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QSlider" name="right">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>700</y>
-     <width>801</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QSlider::handle:horizontal {
+       </property>
+       <property name="maximum">
+        <number>999</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="playSlider">
+       <property name="maximum">
+        <number>999</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="right">
+       <property name="styleSheet">
+        <string notr="true">QSlider::handle:horizontal {
 background: rgb(0, 170, 255);
 border-radius: 5px;
 }</string>
-   </property>
-   <property name="maximum">
-    <number>999</number>
-   </property>
-   <property name="value">
-    <number>999</number>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
+       </property>
+       <property name="maximum">
+        <number>999</number>
+       </property>
+       <property name="value">
+        <number>999</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="1,1">
+     <property name="spacing">
+      <number>10</number>
+     </property>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="bottomMargin">
+        <number>30</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="1,2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_17">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="pushButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>26</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;水印(x, y, alpha)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="text">
+              <string>添加水印</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QSpinBox" name="mx">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;x坐标&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="prefix">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>6000</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="my">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;y坐标&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="maximum">
+              <number>6000</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="ma">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;alpha(0.00~1.00)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_12">
+             <item>
+              <widget class="QPushButton" name="playButton">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pauseButton">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(w,h)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>图像尺寸</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_16">
+           <item>
+            <widget class="QSpinBox" name="width">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;宽度&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="maximum">
+              <number>5000</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="height">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;高度&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="maximum">
+              <number>5000</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>图像金字塔</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_15">
+           <item>
+            <widget class="QSpinBox" name="pydown">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="pyup">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_7">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;裁剪(x,y,w,h)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>图像裁剪</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_14">
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="QSpinBox" name="cx">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;x坐标&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="maximum">
+              <number>6000</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="cy">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;y坐标&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="maximum">
+              <number>6000</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="cw">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;宽度&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="maximum">
+              <number>6000</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="ch">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;高度&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="maximum">
+              <number>6000</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <item alignment="Qt::AlignRight">
+        <widget class="QComboBox" name="color">
+         <item>
+          <property name="text">
+           <string>RGB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>灰度图</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>亮度</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="bright">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;0~100&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>对比度</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="contrast">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;1.0~3.0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="minimum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>3.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>图像旋转</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="rotate">
+           <item>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>90</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>180</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>270</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>图像镜像</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="flip">
+           <item>
+            <property name="text">
+             <string>无</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>垂直镜像</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>水平镜像</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>上下左右镜像</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -624,9 +767,7 @@ border-radius: 5px;
    <header>videowidget.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="VideoUI.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>closeButton</sender>
@@ -741,18 +882,34 @@ border-radius: 5px;
    </hints>
   </connection>
   <connection>
-   <sender>playButton</sender>
-   <signal>clicked()</signal>
+   <sender>left</sender>
+   <signal>sliderMoved(int)</signal>
    <receiver>VideoUIClass</receiver>
-   <slot>Play()</slot>
+   <slot>Left(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>390</x>
-     <y>730</y>
+     <x>100</x>
+     <y>650</y>
     </hint>
     <hint type="destinationlabel">
-     <x>185</x>
+     <x>68</x>
      <y>-109</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>right</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>VideoUIClass</receiver>
+   <slot>Right(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>174</x>
+     <y>704</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>365</x>
+     <y>-62</y>
     </hint>
    </hints>
   </connection>
@@ -789,34 +946,18 @@ border-radius: 5px;
    </hints>
   </connection>
   <connection>
-   <sender>left</sender>
-   <signal>sliderMoved(int)</signal>
+   <sender>playButton</sender>
+   <signal>clicked()</signal>
    <receiver>VideoUIClass</receiver>
-   <slot>Left(int)</slot>
+   <slot>Play()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>100</x>
-     <y>650</y>
+     <x>390</x>
+     <y>730</y>
     </hint>
     <hint type="destinationlabel">
-     <x>68</x>
+     <x>185</x>
      <y>-109</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>right</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>VideoUIClass</receiver>
-   <slot>Right(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>174</x>
-     <y>704</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>365</x>
-     <y>-62</y>
     </hint>
    </hints>
   </connection>
