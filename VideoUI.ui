@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>VideoUI</string>
+   <string>VideoEditor</string>
   </property>
   <property name="styleSheet">
    <string notr="true">
@@ -112,12 +112,6 @@ QLabel
 </string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
-   <property name="leftMargin">
-    <number>12</number>
-   </property>
-   <property name="rightMargin">
-    <number>12</number>
-   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_11">
      <item>
@@ -192,35 +186,6 @@ QLabel
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="closeButton">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 75 11pt &quot;等线&quot;;
-backgroundcolor: rgb(0, 0, 255);</string>
-       </property>
-       <property name="text">
-        <string>X</string>
-       </property>
-       <property name="flat">
-        <bool>true</bool>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>
@@ -305,49 +270,118 @@ backgroundcolor: rgb(0, 0, 255);</string>
       <number>4</number>
      </property>
      <item>
-      <widget class="QSlider" name="left">
-       <property name="styleSheet">
-        <string notr="true">QSlider::handle:horizontal {
+      <layout class="QHBoxLayout" name="horizontalLayout_21">
+       <property name="spacing">
+        <number>20</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_start">
+         <property name="text">
+          <string>裁剪开始</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSlider" name="left">
+         <property name="styleSheet">
+          <string notr="true">QSlider::handle:horizontal {
 background: rgb(0, 170, 255);
 border-radius: 5px;
 }</string>
-       </property>
-       <property name="maximum">
-        <number>999</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
+         </property>
+         <property name="maximum">
+          <number>999</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_start_time">
+         <property name="text">
+          <string>00:00/00:00</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
-      <widget class="QSlider" name="playSlider">
-       <property name="maximum">
-        <number>999</number>
+      <layout class="QHBoxLayout" name="horizontalLayout_20">
+       <property name="spacing">
+        <number>20</number>
        </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
+       <item>
+        <widget class="QLabel" name="label_cur">
+         <property name="text">
+          <string>当前播放</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSlider" name="playSlider">
+         <property name="styleSheet">
+          <string notr="true">QSlider::handle:horizontal {
+background: rgb(0, 150, 255);
+border-radius: 5px;
+}</string>
+         </property>
+         <property name="maximum">
+          <number>999</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_cur_time">
+         <property name="text">
+          <string>00:00/00:00</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
-      <widget class="QSlider" name="right">
-       <property name="styleSheet">
-        <string notr="true">QSlider::handle:horizontal {
+      <layout class="QHBoxLayout" name="horizontalLayout_19">
+       <property name="spacing">
+        <number>20</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_end">
+         <property name="text">
+          <string>裁剪结束</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSlider" name="right">
+         <property name="styleSheet">
+          <string notr="true">QSlider::handle:horizontal {
 background: rgb(0, 170, 255);
 border-radius: 5px;
 }</string>
-       </property>
-       <property name="maximum">
-        <number>999</number>
-       </property>
-       <property name="value">
-        <number>999</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
+         </property>
+         <property name="maximum">
+          <number>999</number>
+         </property>
+         <property name="value">
+          <number>999</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_end_time">
+         <property name="text">
+          <string>00:00/00:00</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
@@ -627,26 +661,59 @@ border-radius: 5px;
        <property name="spacing">
         <number>6</number>
        </property>
-       <item alignment="Qt::AlignRight">
-        <widget class="QComboBox" name="color">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_18" stretch="3,1">
          <item>
-          <property name="text">
-           <string>RGB</string>
-          </property>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Expanding</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>200</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
          <item>
-          <property name="text">
-           <string>灰度图</string>
-          </property>
+          <widget class="QComboBox" name="color">
+           <property name="minimumSize">
+            <size>
+             <width>1</width>
+             <height>1</height>
+            </size>
+           </property>
+           <item>
+            <property name="text">
+             <string>RGB</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>灰度图</string>
+            </property>
+           </item>
+          </widget>
          </item>
-        </widget>
+        </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,5,2">
          <item>
           <widget class="QLabel" name="label">
            <property name="text">
             <string>亮度</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="horizontalSlider_bright">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
@@ -660,11 +727,33 @@ border-radius: 5px;
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,5,2">
          <item>
           <widget class="QLabel" name="label_2">
            <property name="text">
             <string>对比度</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="horizontalSlider_contrast">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="minimum">
+            <number>100</number>
+           </property>
+           <property name="maximum">
+            <number>300</number>
+           </property>
+           <property name="singleStep">
+            <number>1</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
@@ -678,6 +767,9 @@ border-radius: 5px;
            </property>
            <property name="maximum">
             <double>3.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
            </property>
           </widget>
          </item>
@@ -769,22 +861,6 @@ border-radius: 5px;
  </customwidgets>
  <resources/>
  <connections>
-  <connection>
-   <sender>closeButton</sender>
-   <signal>clicked()</signal>
-   <receiver>VideoUIClass</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>777</x>
-     <y>8</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>600</x>
-     <y>-88</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>openButton</sender>
    <signal>clicked()</signal>

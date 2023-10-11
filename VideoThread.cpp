@@ -8,7 +8,8 @@ using namespace cv;
 using namespace std;
 
 //二次迭代可以考虑存放在别处
-static VideoCapture cap1;
+//删除了static关键字
+VideoCapture cap1;
 static bool isExit = false;
 
 // 保存视频

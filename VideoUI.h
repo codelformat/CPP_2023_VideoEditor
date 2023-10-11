@@ -38,6 +38,18 @@ public slots:
 
 
 
+private slots:
+    void do_value_bright(int val);
+    void do_value_contrast(int val);
+    void do_slider_bright(int val);
+    void do_slider_contrast(double val);
+    void do_value_left();
+    void do_value_right();
+    void do_value_cur();
 private:
     Ui::VideoUIClass ui;
+public:
+    QString time_format(int time);
+    void set_start_time();
+    void set_end_time();
 };
