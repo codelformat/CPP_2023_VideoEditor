@@ -65,8 +65,8 @@ void VideoUI::Open()
         return;
     }
 
-    string file = name.toLocal8Bit().data();
-    if (!VideoThread::Get()->Open(file))
+    this->fileUrl = name.toLocal8Bit().data();
+    if (!VideoThread::Get()->Open(this->fileUrl))
     {
         QMessageBox::information(this, "error", name+" open failed");
         return;

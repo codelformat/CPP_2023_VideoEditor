@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
+#include <string>
 #include "ui_VideoUI.h"
 
 class VideoUI : public QWidget
@@ -40,4 +41,5 @@ public slots:
 
 private:
     Ui::VideoUIClass ui;
+    std::string fileUrl;
 };

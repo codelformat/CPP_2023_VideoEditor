@@ -46,6 +46,7 @@ bool VideoThread::Open(const std::string file) {
 	fps = cap1.get(CAP_PROP_FPS);
 	if (fps <= 0) fps = 25;
 	srcFile = file;
+	cout << srcFile << endl;
 	double count = cap1.get(CAP_PROP_FRAME_COUNT);
 
 	// 设置结尾指针位置
