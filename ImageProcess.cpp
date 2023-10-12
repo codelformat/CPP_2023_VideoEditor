@@ -117,26 +117,26 @@ void ImageProcess::Mosaic() {
 		int width = face[t].width;
 		int height = face[t].height;
 
-		//for (int i = y; i < y + height; i += step) {
-		//	for (int j = x; j < x + width; j += step) {
-		//		//ÖðÏñËØ´¦Àí
-		//		for (int k = i; k < step + i; k++) {
-		//			for (int m = j; m < step + j; m++) {
-		//				for (int c = 0; c < 3; c++) {
-		//					//ÑÕÉ«Ìæ»»
-		//					des.at<Vec3b>(k, m)[c] = des.at<Vec3b>(i, j)[2 - c];
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
-		for (int i = y; i < y + height; i++) {
+		for (int i = y; i < y + height; i += step) {
+			for (int j = x; j < x + width; j += step) {
+				//ÖðÏñËØ´¦Àí
+				for (int k = i; k < step + i; k++) {
+					for (int m = j; m < step + j; m++) {
+						for (int c = 0; c < 3; c++) {
+							//ÑÕÉ«Ìæ»»
+							des.at<Vec3b>(k, m)[c] = des.at<Vec3b>(i, j)[2 - c];
+						}
+					}
+				}
+			}
+		}
+		/*for (int i = y; i < y + height; i++) {
 			for (int j = x; j < x + width; j++) {
 				des.at<Vec3b>(i, j)[0] = 255;
 				des.at<Vec3b>(i, j)[1] = 255;
 				des.at<Vec3b>(i, j)[2] = 255;
 			}
-		}
+		}*/
 	}
 	return;
 }
