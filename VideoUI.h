@@ -52,4 +52,6 @@ public:
     QString time_format(int time);
     void set_start_time();
     void set_end_time();
+
+    std::string fileUrl;
 };

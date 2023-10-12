@@ -2,7 +2,10 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
+#include<unordered_map>
+
 using namespace cv;
+static CascadeClassifier object;
 
 void ImageProcess::Set(cv::Mat mat1, cv::Mat mat2) {
 	if (mat1.empty()) return;
@@ -98,7 +101,59 @@ void ImageProcess::Mark(int x, int y, double a) {
 
 }
 
+void ImageProcess::Mosaic() {
+	//加载文件
+	
+	std::vector<Rect> face;
+	// CascadeClassifier object;
+	
+	object.detectMultiScale(des, face, 1.2, 5);
+	//判断有没有人脸
+	if (face.empty()) return;
+	int step = 10;
+	for (int t = 0; t < face.size(); t++) {
+		int x = face[t].tl().x;
+		int y = face[t].tl().y;
+		int width = face[t].width;
+		int height = face[t].height;
+
+		//for (int i = y; i < y + height; i += step) {
+		//	for (int j = x; j < x + width; j += step) {
+		//		//逐像素处理
+		//		for (int k = i; k < step + i; k++) {
+		//			for (int m = j; m < step + j; m++) {
+		//				for (int c = 0; c < 3; c++) {
+		//					//颜色替换
+		//					des.at<Vec3b>(k, m)[c] = des.at<Vec3b>(i, j)[2 - c];
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
+		for (int i = y; i < y + height; i++) {
+			for (int j = x; j < x + width; j++) {
+				des.at<Vec3b>(i, j)[0] = 255;
+				des.at<Vec3b>(i, j)[1] = 255;
+				des.at<Vec3b>(i, j)[2] = 255;
+			}
+		}
+	}
+	return;
+}
+
+//素描化：
+void ImageProcess::Sketch() {
+	std::unordered_map<std::string, Mat> result;
+	cvtColor(des, result["Gray"], COLOR_BGR2GRAY);
+	bitwise_not(result["Gray"], result["Nagative"]);
+	GaussianBlur(result["Nagative"], result["Blur"], Size(21, 21), 0, 0);
+	divide(result["Gray"], 255 - result["Blur"], result["Light"], 256);
+	divide(255 - result["Light"], 255 - result["Blur"], result["Deepen"], 256);
+	des = 255 - result["Deepen"];
+}
+
 ImageProcess::ImageProcess() {
+	object.load(path_);
 }
 
 ImageProcess::~ImageProcess() {

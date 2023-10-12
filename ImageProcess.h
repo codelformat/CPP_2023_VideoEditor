@@ -1,5 +1,6 @@
 #pragma once
 #include <opencv2/core.hpp>
+#include <opencv2/opencv.hpp>
 class ImageProcess
 {
 public:
@@ -39,10 +40,18 @@ public:
 	// 加水印
 	void Mark(int x, int y, double a);
 
+	//人脸打马赛克
+	void Mosaic();
+
+	//素描化
+	void Sketch();
+
 	ImageProcess();
 	~ImageProcess();
 private:
 	cv::Mat src1, src2;
+	std::string path_ = "D:\\Cpp_2023_project\\bin\\haarcascade_frontalface_default.xml";
+	
 
 	// 目标图
 	cv::Mat des;

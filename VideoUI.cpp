@@ -73,8 +73,8 @@ void VideoUI::Open()
         return;
     }
 
-    this->fileUrl = name.toLocal8Bit().data();
-    if (!VideoThread::Get()->Open(this->fileUrl))
+    fileUrl = name.toLocal8Bit().data();
+    if (!VideoThread::Get()->Open(fileUrl))
     {
         QMessageBox::information(this, "error", name+" open failed");
         return;
@@ -203,6 +203,14 @@ void VideoUI::Set()
     if (ui.color->currentIndex() == 1) {
         VideoFilter::Get()->Add(Task{ TASK_GRAY });
         isColor = false;
+    }
+
+    //Í¼Ïñ´òÂë
+    if (ui.mosaic->currentIndex() == 1) {
+        VideoFilter::Get()->Add(Task{ TASK_MOSAIC});
+    }
+    else if (ui.mosaic->currentIndex() == 2) {
+        VideoFilter::Get()->Add(Task{ TASK_SKETCH });
     }
 
     //Í¼ÏñÐý×ª 1:90,2:180,3:270

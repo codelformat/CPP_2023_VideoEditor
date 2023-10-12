@@ -17,6 +17,8 @@ enum TaskType {
 	TASK_CLIP,
 	TASK_GRAY,
 	TASK_MASK,
+	TASK_MOSAIC,
+	TASK_SKETCH,
 };
 
 struct Task {

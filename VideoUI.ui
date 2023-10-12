@@ -654,6 +654,25 @@ border-radius: 5px;
          </item>
         </layout>
        </item>
+       <item>
+        <widget class="QComboBox" name="mosaic">
+         <item>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2</string>
+          </property>
+         </item>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>

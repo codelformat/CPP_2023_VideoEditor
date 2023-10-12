@@ -53,6 +53,12 @@ public:
 			case TASK_MASK:
 				p.Mark(tasks[i].para[0], tasks[i].para[1], tasks[i].para[2]);
 				break;
+			case TASK_MOSAIC:
+				p.Mosaic();
+				break;
+			case TASK_SKETCH:
+				p.Sketch();
+				break;
 			default:
 				break;
 			}
