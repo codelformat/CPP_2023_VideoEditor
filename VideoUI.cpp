@@ -11,11 +11,12 @@
 #include "VideoFilter.h"
 #include "AudioThread.h"
 using namespace std;
+using namespace cv;
 static bool pressSlider = false;
 static bool isExport = false;
 static bool isColor = true;
 static bool isMark = false;
-
+extern  VideoCapture cap1;
 VideoUI::VideoUI(QWidget *parent)
     : QWidget(parent)
 {
@@ -45,6 +46,13 @@ VideoUI::VideoUI(QWidget *parent)
         this,
         SLOT(ExportEnd())//槽函数
         );
+    QObject::connect(ui.horizontalSlider_bright,SIGNAL(valueChanged(int)),this,SLOT(do_value_bright(int)));
+    QObject::connect(ui.horizontalSlider_contrast,SIGNAL(valueChanged(int)),this,SLOT(do_value_contrast(int)));
+    QObject::connect(ui.bright,SIGNAL(valueChanged(int)),this,SLOT(do_slider_bright(int)));
+    QObject::connect(ui.contrast,SIGNAL(valueChanged(double)),this,SLOT(do_slider_contrast(double)));
+    QObject::connect(ui.right,SIGNAL(valueChanged(int)),this,SLOT(do_value_right()));
+    QObject::connect(ui.left,SIGNAL(valueChanged(int)),this,SLOT(do_value_left()));
+    QObject::connect(ui.playSlider,SIGNAL(valueChanged(int)),this,SLOT(do_value_cur()));
     ui.pauseButton->hide();
 
     startTimer(40); // 可根据fps设置定时器的时间
@@ -72,6 +80,8 @@ void VideoUI::Open()
         return;
     }
     else {
+        set_start_time();
+        set_end_time();
         Play();
     }
 
@@ -284,6 +294,128 @@ void VideoUI::Mark() {
     VideoThread::Get()->SetMark(mark);
     isMark = true;
 }
+//连接滚动条和数值
+void VideoUI::do_value_bright(int val){
+       ui.bright->setValue(val);
+}
 
+void VideoUI::do_value_contrast(int val){
+       double val_contrast=val/100.00;
+       ui.contrast->setValue(val_contrast);
+}
+void VideoUI::do_slider_bright(int val){
+       ui.horizontalSlider_bright->setValue(val);
+}
+void VideoUI::do_slider_contrast(double val){
+       ui.horizontalSlider_contrast->setValue((int)(val*100));
+}
+void VideoUI::do_value_right(){
+
+        double count = cap1.get(CAP_PROP_FRAME_COUNT);
+        int fps = cap1.get(CAP_PROP_FPS);
+        if (fps <= 0) fps = 25;
+        int val=ui.right->value();
+        int total=ui.right->maximum()-ui.right->minimum()+1;
+        double rate=val*1.0/total;
+        double total_time=count/fps;
+        double end_time=total_time*rate;
+        QString str=time_format(end_time);
+        str+='/';
+        str.append(time_format(total_time));
+        ui.label_end_time->setText(str);}
+void VideoUI::do_value_left(){
+
+
+
+        double count = cap1.get(CAP_PROP_FRAME_COUNT);
+        int fps = cap1.get(CAP_PROP_FPS);
+        if (fps <= 0) fps = 25;
+        int val=ui.left->value();
+        int total=ui.left->maximum()-ui.left->minimum()+1;
+        double rate=val*1.0/total;
+        double total_time=count/fps;
+        double end_time=total_time*rate;
+        QString str=time_format(end_time);
+        str+='/';
+        str.append(time_format(total_time));
+        ui.label_start_time->setText(str);
+
+
+}
+QString VideoUI::time_format(int time){
+       QString str="";
+       if(time>3600){
+        int temp=time/3600;
+        if(temp<10){
+            str+='0';
+        }
+        str.append(QString::number(temp));
+        str.append(':');
+        time%=3600;
+       }
+       else{
+        //str.append("00:");
+       }
+       if(time>60){
+        int temp=time/60;
+        if(temp<10){
+            str.append('0');
+        }
+        str.append(QString::number(time/60));
+        str.append(':');
+        time%=60;
+       }
+       else{
+        str.append("00:");
+       }
+       if(time<10){
+        str+='0';
+       }
+       str.append(QString::number(time));
+       return str;
+}
+void VideoUI::do_value_cur(){
+       double count = cap1.get(CAP_PROP_FRAME_COUNT);
+       int fps = cap1.get(CAP_PROP_FPS);
+       if (fps <= 0) fps = 25;
+       int val=ui.playSlider->value();
+       int total=ui.playSlider->maximum()-ui.playSlider->minimum()+1;
+       double rate=val*1.0/total;
+       double total_time=count/fps;
+       double end_time=total_time*rate;
+       QString str=time_format(end_time);
+       str+='/';
+       str.append(time_format(total_time));
+       ui.label_cur_time->setText(str);
+}
+void VideoUI::set_start_time(){
+       double count = cap1.get(CAP_PROP_FRAME_COUNT);
+       int fps = cap1.get(CAP_PROP_FPS);
+       if (fps <= 0) fps = 25;
+       int val=ui.left->value();
+       int total=ui.left->maximum()-ui.left->minimum()+1;
+       double rate=val*1.0/total;
+       double total_time=count/fps;
+       double end_time=total_time*rate;
+       QString str=time_format(end_time);
+       str+='/';
+       str.append(time_format(total_time));
+       ui.label_start_time->setText(str);
+
+}
+void VideoUI::set_end_time(){
+       double count = cap1.get(CAP_PROP_FRAME_COUNT);
+       int fps = cap1.get(CAP_PROP_FPS);
+       if (fps <= 0) fps = 25;
+       int val=ui.right->value();
+       int total=ui.right->maximum()-ui.right->minimum()+1;
+       double rate=val*1.0/total;
+       double total_time=count/fps;
+       double end_time=total_time*rate;
+       QString str=time_format(end_time);
+       str+='/';
+       str.append(time_format(total_time));
+       ui.label_end_time->setText(str);
+}
 VideoUI::~VideoUI()
 {}
