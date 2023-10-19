@@ -10,6 +10,7 @@
 #include "VideoThread.h"
 #include "VideoFilter.h"
 #include "AudioThread.h"
+#include<QStackedLayout>
 using namespace std;
 using namespace cv;
 static bool pressSlider = false;
@@ -17,6 +18,7 @@ static bool isExport = false;
 static bool isColor = true;
 static bool isMark = false;
 extern  VideoCapture cap1;
+bool isClip=false;
 VideoUI::VideoUI(QWidget *parent)
     : QWidget(parent)
 {
@@ -54,6 +56,9 @@ VideoUI::VideoUI(QWidget *parent)
     QObject::connect(ui.left,SIGNAL(valueChanged(int)),this,SLOT(do_value_left()));
     QObject::connect(ui.playSlider,SIGNAL(valueChanged(int)),this,SLOT(do_value_cur()));
     ui.pauseButton->hide();
+
+    ui.stackedLayout->setStackingMode(QStackedLayout::StackAll);
+    connect(ui.drawRect,SIGNAL(clipSignal(double,double,double,double)),this,SLOT(do_des_clip(double,double,double,double)));
 
     startTimer(40); // 可根据fps设置定时器的时间
 }
@@ -135,7 +140,7 @@ void VideoUI::Set()
     isColor = true;
     VideoFilter::Get()->Clear();
     // 视频图像裁剪
-    bool isClip = false;
+    //isClip = false;//暂时改为了全局变量；
     int cx = ui.cx->value();
     int cy = ui.cy->value();
     int cw = ui.cw->value();
@@ -425,5 +430,40 @@ void VideoUI::set_end_time(){
        str.append(time_format(total_time));
        ui.label_end_time->setText(str);
 }
+
+void VideoUI::do_des_clip(double xRatio,double yRatio,double widthRatio,double heightRatio){
+       VideoFilter::Get()->Clear();
+       int width = cap1.get(CAP_PROP_FRAME_WIDTH);
+       int height = cap1.get(CAP_PROP_FRAME_HEIGHT);
+       int cx=xRatio*width;
+       int cy=yRatio*height;
+       int cw=widthRatio*width;
+       int ch=heightRatio*height;
+       if(cw<0){
+        cx=cx+cw;
+        cw=-cw;
+       }
+       if(ch<0){
+        cy=cy+ch;
+        ch=-ch;
+       }
+       //此处有一问题暂未处理。即矩形为从右下往左上拖动，此时widthRaito和heightRaito为负，应更换顶点位置。
+       ui.cx->setValue(cx);
+       ui.cy->setValue(cy);
+       ui.cw->setValue(cw);
+       ui.ch->setValue(ch);
+       /*if ((cx+cw)<width&&(cy+ch)<height&&cx>0&&cy>0)
+       {
+        isClip = true;
+
+        VideoFilter::Get()->Add(Task{ TASK_CLIP, {(double)cx, (double)cy, (double)cw, (double)ch} });
+
+        double w = VideoThread::Get()->width;
+        double h = VideoThread::Get()->height;
+        VideoFilter::Get()->Add(Task{ TASK_RESIZE, {w, h} });
+       }*/
+       this->Set();
+}
+
 VideoUI::~VideoUI()
 {}

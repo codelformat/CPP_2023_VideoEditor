@@ -195,7 +195,15 @@ QLabel
       <number>6</number>
      </property>
      <item>
-      <widget class="VideoWidget" name="src1">
+      <layout class="QStackedLayout" name="stackedLayout">
+      <!--页面1，绘制矩形图-->
+      <item>
+       <widget class="DrawingWidget" name="drawRect">
+       </widget>
+      </item>
+      <!--页面2，播放视频-->
+      <item>
+       <widget class="VideoWidget" name="src1">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -227,6 +235,8 @@ QLabel
         </size>
        </property>
       </widget>
+      </item>
+      </layout>
      </item>
      <item>
       <widget class="VideoWidget" name="des">
@@ -876,6 +886,12 @@ border-radius: 5px;
    <class>VideoWidget</class>
    <extends>QOpenGLWidget</extends>
    <header>videowidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DrawingWidget</class>
+   <extends>QWidget</extends>
+   <header>DrawingWidget.h</header>
+   
   </customwidget>
  </customwidgets>
  <resources/>
