@@ -23,6 +23,7 @@ extern "C"
 #include "MediaEncoder.h"
 #include "Rtmp.h"
 
+using namespace std;
 /**
 * 开发步骤
 * 先在ImageProcess中实现算法
@@ -47,6 +48,12 @@ int main(int argc, char* argv[])
 
  //   const char* outUrl = "rtmp://localhost/live";
  //   const char* fileUrl = "D:\\Cpp_2023_project\\bin\\origin.mp4";
+
+ //   //输入流
+ //   AVStream* in_stream = NULL;
+
+ //   //输出流
+ //   AVStream* out_stream = NULL;
 
  //   int sampleRate = 44100;
  //   int channels = 2;
@@ -82,7 +89,15 @@ int main(int argc, char* argv[])
  //       return -1;
  //   }
 
- //   AVCodecParameters* codecParameters = fileCtx->streams[1]->codecpar;
+
+ //   in_stream = fileCtx->streams[1];
+ //   AVCodecParameters* codecParameters = in_stream->codecpar;
+
+ //   int audio_stream_index = av_find_best_stream(fileCtx, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
+ //   if (audio_stream_index < 0) {
+ //       av_log(NULL, AV_LOG_DEBUG, "寻找最好音频流失败，请检查输入文件！\n");
+ //       return AVERROR(EINVAL);
+ //   }
 
  //   MediaEncoder* me = MediaEncoder::Get();
  //   me->channels = codecParameters->channels;
@@ -129,6 +144,27 @@ int main(int argc, char* argv[])
 
 
  //   AVPacket packet;
+
+ //  
+ //  
+
+
+ //   //while (av_read_frame(fmt_ctx, &packet) >= 0) {
+ //   //    if (packet.stream_index == audio_stream_index) {
+ //   //        //时间基计算，音频pts和dts一致
+ //   //        packet.pts = av_rescale_q_rnd(packet.pts, in_stream->time_base, out_stream->time_base, (AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
+ //   //        packet.dts = packet.pts;
+ //   //        packet.duration = av_rescale_q(packet.duration, in_stream->time_base, out_stream->time_base);
+ //   //        packet.pos = -1;
+ //   //        packet.stream_index = 0;
+ //   //        //将包写到输出媒体文件
+ //   //        av_interleaved_write_frame(ofmt_ctx, &packet);
+ //   //        //减少引用计数，避免内存泄漏
+ //   //        av_packet_unref(&packet);
+ //   //    }
+ //   //}
+
+
  //   for (;;)
  //   {       
  //  //     if (input->bytesAvailable() <  readSize)
@@ -156,47 +192,27 @@ int main(int argc, char* argv[])
  //           std::cout << "$" << std::flush;
  //           continue;
  //       }
+ //       /*cout << "Resample start!" << endl;
  //       AVFrame* pcm = me->Resample(packet.data);
+ //       if (!pcm) {
+ //           cout << "Resample failed!" << endl;
+	//		continue;
+ //       }
+ //       cout << "Encode end!" << endl;
  //       AVPacket * pkt = me->EncodeAudio(pcm);
- //       if(!pkt) continue;
+ //       if(!pkt) continue;*/
 	//	////推流
 	//
- //       if (!rp->SendFrame(pkt)) {
+ //       if (!rp->SendFrame(&packet)) {
 	//		std::cout << "SendFrame Failed!" << std::endl;
 	//		continue;
 	//	}
 	//	std::cout << "#" << std::flush;
- //       av_packet_unref(pkt);
+ //       
  //   }
  //   delete buf;
 
- //   return a.exec(); // main program
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ //   return 0; // main program
 
 
     // ---- test program ---- //

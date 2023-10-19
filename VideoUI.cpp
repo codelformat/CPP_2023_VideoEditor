@@ -10,7 +10,7 @@
 #include "VideoThread.h"
 #include "VideoFilter.h"
 #include "AudioThread.h"
-#include<QStackedLayout>
+#include "DrawingWidget.h"
 using namespace std;
 using namespace cv;
 static bool pressSlider = false;

@@ -1,7 +1,16 @@
 #ifndef DRAWINGWIDGET_H
 #define DRAWINGWIDGET_H
 
-#include<QtWidgets>
+#include<QtWidgets/qwidget.h>
+#include <QtWidgets/qstackedlayout.h>
+#include <QtCore/QRect>
+#include <QtCore/QPoint>
+#include <QtCore/QEvent>
+#include <QtGui/QPen>
+#include <QtGui/QPainter>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QPaintEvent>
+
 
 class DrawingWidget: public QWidget{
     Q_OBJECT

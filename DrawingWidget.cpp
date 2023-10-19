@@ -1,4 +1,4 @@
-#include<DrawingWidget.h>
+#include "DrawingWidget.h"
 
 void DrawingWidget::mousePressEvent(QMouseEvent *event){
     isDrawing=true;//由按钮触发变为true
