@@ -46,6 +46,8 @@ private slots:
     void do_value_left();
     void do_value_right();
     void do_value_cur();
+public slots:
+    void do_des_clip(double xRatio,double yRatio,double widthRatio,double heightRatio);
 private:
     Ui::VideoUIClass ui;
 public:
