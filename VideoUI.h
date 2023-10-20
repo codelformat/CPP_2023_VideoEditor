@@ -1,9 +1,10 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QMainWindow>
 #include "ui_VideoUI.h"
 
-class VideoUI : public QWidget
+class VideoUI : public QMainWindow
 {
     Q_OBJECT
 

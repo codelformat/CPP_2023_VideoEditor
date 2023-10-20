@@ -20,7 +20,7 @@ static bool isMark = false;
 extern  VideoCapture cap1;
 bool isClip=false;
 VideoUI::VideoUI(QWidget *parent)
-    : QWidget(parent)
+    : QMainWindow(parent)
 {
     ui.setupUi(this);
     //setWindowFlags(Qt::FramelessWindowHint);
@@ -57,7 +57,7 @@ VideoUI::VideoUI(QWidget *parent)
     QObject::connect(ui.playSlider,SIGNAL(valueChanged(int)),this,SLOT(do_value_cur()));
     ui.pauseButton->hide();
 
-    ui.stackedLayout->setStackingMode(QStackedLayout::StackAll);
+    ui.stackedLayout->QStackedLayout::setStackingMode(QStackedLayout::StackAll);
     connect(ui.drawRect,SIGNAL(clipSignal(double,double,double,double)),this,SLOT(do_des_clip(double,double,double,double)));
 
     startTimer(40); // 可根据fps设置定时器的时间
