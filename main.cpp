@@ -7,18 +7,18 @@
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 #include <exception>
-#include <QtMultimedia/QAudioInput>
-#include <QtMultimedia/QAudioFormat>
-#include <QtMultimedia/QAudioDevice>
-#include <QtMultimedia/qmediadevices.h>
-#include <QtMultimedia/qaudiosource.h>
+//#include <QtMultimedia/QAudioInput>
+//#include <QtMultimedia/QAudioFormat>
+//#include <QtMultimedia/QAudioDevice>
+//#include <QtMultimedia/qmediadevices.h>
+//#include <QtMultimedia/qaudiosource.h>
 
 extern "C"
 {
-#include <libavformat/avformat.h> // test
-#include <libswresample/swresample.h>
-#include <libavcodec/avcodec.h>
-#include <libswscale/swscale.h>
+//#include <libavformat/avformat.h> // test
+//#include <libswresample/swresample.h>
+//#include <libavcodec/avcodec.h>
+//#include <libswscale/swscale.h>
 }
 #include "MediaEncoder.h"
 #include "Rtmp.h"

@@ -114,83 +114,6 @@ QLabel
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_4">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_11">
-      <item>
-       <widget class="QPushButton" name="setButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>60</width>
-          <height>26</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>设置</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="openButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>60</width>
-          <height>26</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>打开</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="exportButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>60</width>
-          <height>26</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>导出</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::MinimumExpanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>700</width>
-          <height>5</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item>
      <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="1,1">
       <property name="spacing">
        <number>6</number>
@@ -200,7 +123,7 @@ QLabel
         <item>
          <widget class="DrawingWidget" name="drawRect" native="true"/>
         </item>
-        <item>
+        <item row="0" column="0">
          <widget class="VideoWidget" name="src1">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -881,32 +804,194 @@ border-radius: 5px;
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>992</width>
-     <height>21</height>
-    </rect>
+  <widget class="QToolBar" name="toolBar">
+   <property name="font">
+    <font>
+     <family>Calibri</family>
+     <pointsize>10</pointsize>
+     <italic>false</italic>
+     <bold>true</bold>
+    </font>
    </property>
-   <widget class="QMenu" name="menu_F">
-    <property name="title">
-     <string>文件(&amp;F)</string>
-    </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
-   </widget>
-   <addaction name="menu_F"/>
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">
+font: 700 10pt &quot;Calibri&quot;;
+</string>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_open"/>
+   <addaction name="action_export"/>
+   <addaction name="action_set"/>
+   <addaction name="separator"/>
+   <addaction name="action"/>
+   <addaction name="action_mirror"/>
+   <addaction name="separator"/>
+   <addaction name="action_RGB"/>
+   <addaction name="action_greyscale"/>
+   <addaction name="separator"/>
+   <addaction name="action_pyramid"/>
+   <addaction name="action_size"/>
+   <addaction name="action_cut"/>
+   <addaction name="separator"/>
+   <addaction name="action_watermark"/>
+   <addaction name="action_mosaic"/>
+   <addaction name="action_sketch"/>
   </widget>
-  <action name="action">
+  <action name="action_open">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/open.png</normaloff>:/VideoUI/Resources/open.png</iconset>
+   </property>
    <property name="text">
     <string>打开</string>
    </property>
+   <property name="toolTip">
+    <string>打开视频</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
-  <action name="action_2">
+  <action name="action_export">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/export.png</normaloff>:/VideoUI/Resources/export.png</iconset>
+   </property>
    <property name="text">
     <string>导出</string>
+   </property>
+   <property name="toolTip">
+    <string>导出视频</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_set">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/set.png</normaloff>:/VideoUI/Resources/set.png</iconset>
+   </property>
+   <property name="text">
+    <string>设置</string>
+   </property>
+   <property name="toolTip">
+    <string>应用此设置</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/rotate.png</normaloff>:/VideoUI/Resources/rotate.png</iconset>
+   </property>
+   <property name="text">
+    <string>旋转</string>
+   </property>
+   <property name="toolTip">
+    <string>图像旋转</string>
+   </property>
+  </action>
+  <action name="action_90">
+   <property name="text">
+    <string>旋转90°</string>
+   </property>
+  </action>
+  <action name="action_mirror">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/mirror.png</normaloff>:/VideoUI/Resources/mirror.png</iconset>
+   </property>
+   <property name="text">
+    <string>镜像</string>
+   </property>
+   <property name="toolTip">
+    <string>图像镜像</string>
+   </property>
+  </action>
+  <action name="action_RGB">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/rgb.png</normaloff>:/VideoUI/Resources/rgb.png</iconset>
+   </property>
+   <property name="text">
+    <string>RGB</string>
+   </property>
+  </action>
+  <action name="action_greyscale">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/grey.png</normaloff>:/VideoUI/Resources/grey.png</iconset>
+   </property>
+   <property name="text">
+    <string>灰度图</string>
+   </property>
+  </action>
+  <action name="action_pyramid">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/pyramid.png</normaloff>:/VideoUI/Resources/pyramid.png</iconset>
+   </property>
+   <property name="text">
+    <string>金字塔</string>
+   </property>
+  </action>
+  <action name="action_size">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/size.png</normaloff>:/VideoUI/Resources/size.png</iconset>
+   </property>
+   <property name="text">
+    <string>尺寸</string>
+   </property>
+  </action>
+  <action name="action_cut">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/cut.png</normaloff>:/VideoUI/Resources/cut.png</iconset>
+   </property>
+   <property name="text">
+    <string>裁剪</string>
+   </property>
+  </action>
+  <action name="action_watermark">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/watermark.png</normaloff>:/VideoUI/Resources/watermark.png</iconset>
+   </property>
+   <property name="text">
+    <string>水印</string>
+   </property>
+  </action>
+  <action name="action_mosaic">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/mosaic.png</normaloff>:/VideoUI/Resources/mosaic.png</iconset>
+   </property>
+   <property name="text">
+    <string>人脸打码</string>
+   </property>
+  </action>
+  <action name="action_sketch">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/sketch.png</normaloff>:/VideoUI/Resources/sketch.png</iconset>
+   </property>
+   <property name="text">
+    <string>素描图</string>
    </property>
   </action>
  </widget>
@@ -924,24 +1009,10 @@ border-radius: 5px;
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="VideoUI.qrc"/>
+ </resources>
  <connections>
-  <connection>
-   <sender>openButton</sender>
-   <signal>clicked()</signal>
-   <receiver>VideoUIClass</receiver>
-   <slot>Open()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>454</x>
-     <y>322</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>472</x>
-     <y>-94</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>playSlider</sender>
    <signal>sliderPressed()</signal>
@@ -987,38 +1058,6 @@ border-radius: 5px;
     <hint type="destinationlabel">
      <x>199</x>
      <y>-109</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>setButton</sender>
-   <signal>clicked()</signal>
-   <receiver>VideoUIClass</receiver>
-   <slot>Set()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>715</x>
-     <y>373</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>707</x>
-     <y>-106</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>exportButton</sender>
-   <signal>clicked()</signal>
-   <receiver>VideoUIClass</receiver>
-   <slot>Export()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>549</x>
-     <y>323</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>540</x>
-     <y>-98</y>
     </hint>
    </hints>
   </connection>
