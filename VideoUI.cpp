@@ -70,6 +70,18 @@ VideoUI::VideoUI(QWidget *parent)
     QObject::connect(ui.playSlider,SIGNAL(valueChanged(int)),this,SLOT(do_value_cur()));
 
     ui.pauseButton->hide();
+    //组件的位置可能要调整下
+//    ui.color->hide();
+//    ui.ma->hide();
+//    ui.mx->hide();
+//    ui.my->hide();
+//    ui.width->hide();
+//    ui.pydown->hide();
+//    ui.flip->hide();
+//    ui.rotate->hide();
+//    ui.height->hide();
+//    ui.mosaic->hide();
+
 
     ui.stackedLayout->QStackedLayout::setStackingMode(QStackedLayout::StackAll);
     connect(ui.drawRect,SIGNAL(clipSignal(double,double,double,double)),this,SLOT(do_des_clip(double,double,double,double)));
@@ -87,7 +99,8 @@ void VideoUI::timerEvent(QTimerEvent* e) {
 
 void VideoUI::Open()
 {
-    QString name = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("请选择视频文件"));
+    //QString name = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("请选择视频文件"));
+    QString name = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("select file name"));
     if (name.isEmpty()) {
         return;
     }

@@ -213,7 +213,7 @@ QLabel
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="left">
+         <widget class="MySlider" name="left">
           <property name="styleSheet">
            <string notr="true">QSlider::handle:horizontal {
 background: rgb(0, 170, 255);
@@ -250,7 +250,7 @@ border-radius: 5px;
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="playSlider">
+         <widget class="MySlider" name="playSlider">
           <property name="styleSheet">
            <string notr="true">QSlider::handle:horizontal {
 background: rgb(0, 150, 255);
@@ -287,7 +287,7 @@ border-radius: 5px;
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="right">
+         <widget class="MySlider" name="right">
           <property name="styleSheet">
            <string notr="true">QSlider::handle:horizontal {
 background: rgb(0, 170, 255);
@@ -1007,6 +1007,11 @@ font: 700 10pt &quot;Calibri&quot;;
    <extends>QWidget</extends>
    <header>DrawingWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MySlider</class>
+   <extends>QSlider</extends>
+   <header location="global">MySlider.h</header>
   </customwidget>
  </customwidgets>
  <resources>
