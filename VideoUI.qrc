@@ -20,5 +20,6 @@
         <file>Resources/images (1).png</file>
         <file>Resources/mosaic.png</file>
         <file>Resources/sketch.png</file>
+        <file>Resources/eraser.png</file>
     </qresource>
 </RCC>
