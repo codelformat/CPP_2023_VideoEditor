@@ -48,7 +48,7 @@ public:
 	///输出参数
 	int outWidth = 1280;
 	int outHeight = 720;
-	int bit_rate = 40000000; //压缩后每秒视频的bit位大小 50kB
+	int bit_rate = 40000; //压缩后每秒视频的bit位大小 50kB
 	int fps = 25; // 摄像头帧率
 	int nb_samples = 1024; //音频一帧的采样数量
 	int outSampleFmt = SAMPLE_FMT_FLTP; //输出音频采样格式

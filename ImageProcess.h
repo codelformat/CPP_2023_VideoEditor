@@ -46,6 +46,9 @@ public:
 	//Àÿ√ËªØ
 	void Sketch();
 
+	// »•ÀÆ”°
+	void removeWatermark();
+
 	ImageProcess();
 	~ImageProcess();
 private:

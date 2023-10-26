@@ -19,6 +19,7 @@ enum TaskType {
 	TASK_MASK,
 	TASK_MOSAIC,
 	TASK_SKETCH,
+	TASK_REMOVE_WATERMARK
 };
 
 struct Task {

@@ -59,6 +59,9 @@ public:
 			case TASK_SKETCH:
 				p.Sketch();
 				break;
+			case TASK_REMOVE_WATERMARK:
+				p.removeWatermark();
+				break;
 			default:
 				break;
 			}

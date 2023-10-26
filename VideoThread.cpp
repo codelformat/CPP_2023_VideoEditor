@@ -110,7 +110,7 @@ void VideoThread::run()
 		if (!isWrite)
 			ViewDes(des);
 		int s = 0;
-		s = 1000 / fps;
+		s = 1000 / fps ;
 		if (isWrite) {
 			s = 1;
 			vw.write(des);

@@ -9,6 +9,7 @@
 #include <QtCore/QFile>
 #include "VideoThread.h"
 #include "VideoFilter.h"
+#include "VideoTranscoder.h"
 #include "AudioThread.h"
 #include "DrawingWidget.h"
 using namespace std;
@@ -216,6 +217,18 @@ void VideoUI::Set()
     }
     else if (ui.mosaic->currentIndex() == 2) {
         VideoFilter::Get()->Add(Task{ TASK_SKETCH });
+    }
+    else if (ui.mosaic->currentIndex() == 3) {
+        /*const char* outUrl = "rtmp://localhost/live";
+        auto vt = VideoTranscoder::Get(fileUrl, outUrl);
+        vt->open();
+        mutex.lock();
+        std::thread transcode_thread(&VideoTranscoder::transcode, vt);
+        string cmd = "ffplay ";
+        cmd += outUrl;
+        system(cmd.c_str());*/
+
+       // mutex.unlock();
     }
 
     //Í¼ÏñÐý×ª 1:90,2:180,3:270

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
+#include <QtCore/qmutex.h>
 #include "ui_VideoUI.h"
 
 class VideoUI : public QWidget
@@ -52,6 +53,7 @@ private:
     Ui::VideoUIClass ui;
 public:
     QString time_format(int time);
+    QMutex mutex;
     void set_start_time();
     void set_end_time();
 

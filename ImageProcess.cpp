@@ -152,6 +152,41 @@ void ImageProcess::Sketch() {
 	des = 255 - result["Deepen"];
 }
 
+//去水印
+void ImageProcess::removeWatermark() {
+	Mat gray;
+	cvtColor(des, gray, COLOR_BGR2GRAY);
+
+	//图像二值化，筛选出白色区域部分
+	Mat thresh;
+	threshold(gray, thresh, 220, 255, THRESH_BINARY);
+
+	//提取图片下方的水印，制作掩模图像
+	Mat mask = Mat::zeros(des.size(), CV_8U);
+	int height = des.rows;
+	int width = des.cols;
+	int start = 0.9 * height;
+	//遍历图像像素，提取出水印部分像素，制作掩模图像
+	for (int i = start; i < height; i++)
+	{
+		uchar* data = thresh.ptr<uchar>(i);
+		for (int j = 0; j < width; j++)
+		{
+			if (data[j] == 255)
+			{
+				mask.at<uchar>(i, j) = 255;
+			}
+		}
+	}
+
+	//将掩模进行膨胀，使其能够覆盖图像更大区域
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(5, 5));
+	dilate(mask, mask, kernel);
+
+	//使用inpaint进行图像修复
+	inpaint(des, mask, des, 1, INPAINT_NS);
+}
+
 ImageProcess::ImageProcess() {
 	object.load(path_);
 }
