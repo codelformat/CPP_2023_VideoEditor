@@ -34,14 +34,14 @@ int main(int argc, char* argv[])
 	if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
 		QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
 	QApplication a(argc, argv);
-	//VideoUI w;
-	//w.show();
+	VideoUI w;
+	w.show();
 	
 	//return a.exec();
 
 	//test
 
-	const char* inUrl = "D:\\Cpp_2023_project\\bin\\test.mp4";
+	/*const char* inUrl = "D:\\Cpp_2023_project\\bin\\test.mp4";
 	const char* outUrl = "rtmp://localhost/live";
 
 	VideoTranscoder* transcoder = VideoTranscoder::Get(inUrl, outUrl);
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 	cmd += outUrl;
 	system(cmd.c_str());
 
-	delete transcoder;
+	delete transcoder;*/
 
 
 	return a.exec();

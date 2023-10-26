@@ -1,6 +1,6 @@
 #include "myslider.h"
-#include <QMouseEvent>
-#include <QDebug>
+#include <QtGUI/QMouseEvent>
+#include <QtCore/QDebug>
 
 MySlider::MySlider(QWidget *parent):QSlider (parent)
 {

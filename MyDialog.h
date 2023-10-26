@@ -3,13 +3,13 @@
 #define MYDIALOG_H
 
 #include<QtWidgets/QDialog>
-#include<QSpinBox>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include<QPushButton>
+#include<QtWidgets/QSpinBox>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QVBoxLayout>
+#include<QtWidgets/QPushButton>
 class MyDialog: public QDialog{
       Q_OBJECT
 public:

@@ -2,7 +2,7 @@
 
 extern "C"
 {
-//#include <libswresample/swresample.h>
+#include <libswresample/swresample.h>
 
 }
 /// <summary>

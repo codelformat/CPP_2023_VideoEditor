@@ -4,10 +4,15 @@
 class ImageProcess
 {
 public:
+	static ImageProcess* Get() {
+		static ImageProcess p;
+		return &p;
+	}
+
 	// 设置原图，会清理之前的处理结果
 	void Set(cv::Mat mat1, cv::Mat mat2);
 	// 获取处理后的结果
-	cv::Mat Get() { return des; }
+	cv::Mat getMat() { return des; }
 	
 	//设置亮度和对比度
 	/** 

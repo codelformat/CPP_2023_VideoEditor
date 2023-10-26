@@ -18,9 +18,15 @@ public:
 
     bool open();
     void transcode();
+
+    void stopTranscoding() {
+        isRunning = false;
+    }
     void close();
 
 private:
+    std::atomic<bool> isRunning = false;
+
     std::string inputUrl;
     std::string outputUrl;
 
@@ -36,8 +42,6 @@ private:
     bool openOutput();
     void copyStreamContext();
     void calculateFrameDelay();
-    bool readAndWriteFrame();
-
-    
+   // bool readAndWriteFrame();
 };
 

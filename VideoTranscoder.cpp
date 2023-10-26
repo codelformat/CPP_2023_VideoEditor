@@ -105,9 +105,8 @@ void VideoTranscoder::calculateFrameDelay() {
     frame_delay = frame_rate > 0 ? static_cast<int64_t>(1e6 / frame_rate) : 0;
 }
 
-bool readAndWriteFrame();
-
 void VideoTranscoder::transcode() {
+    isRunning = true;
     start_time = high_resolution_clock::now();
     //while (readAndWriteFrame()) {
     //    // Loop until end of file or error
@@ -139,7 +138,12 @@ void VideoTranscoder::transcode() {
         cout << "#" << flush;
 
         av_packet_unref(&packet);
+
+        if (!isRunning)
+            break;
     }
+
+    this->close();
 }
 
 void VideoTranscoder::close() {
