@@ -27,7 +27,7 @@ void MySlider::mousePressEvent(QMouseEvent *ev)
 
     //设定滑动条位置
     this->setValue(value);
-
-    //滑动条移动事件等事件也用到了mousePressEvent,加这句话是为了不对其产生影响，是的Slider能正常相应其他鼠标事件
+    //emit valueChanged(value);
+    //滑动条移动事件等事件也用到了mousePressEvent,加这句话是为了不对其产生影响，使得Slider能正常相应其他鼠标事件
     QSlider::mousePressEvent(ev);
 }

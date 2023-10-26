@@ -16,6 +16,7 @@
 #include<QInputDialog>
 #include <QFormLayout>
 #include"MyDialog.h"
+#include"BasicDialog.h"
 using namespace std;
 using namespace cv;
 static bool pressSlider = false;
@@ -118,7 +119,9 @@ void VideoUI::Open()
     }
 
 }
-
+bool VideoUI::openFile(){
+    return false;
+}
 void VideoUI::Play() {
     if(VideoThread::Get()->isThreadOpen())
     {
@@ -667,6 +670,16 @@ void VideoUI::on_action_size_triggered()
 void VideoUI::on_action_pyramid_triggered()
 {   //存在问题 无法改动值
 
+    BasicDialog* pyramid=new BasicDialog(ui.pydown,ui.pyup);
+    pyramid->setWindowTitle("设置图像金字塔");
+    pyramid->label1->setText("PYDOWN: ");
+    pyramid->label2->setText("PYUP: ");
+    //pyramid->setModal(true);
+    //pyramid->show();
+    pyramid->exec();
+    this->Set();
+
+    /*
     dialog_size=new MyDialog();
     dialog_size->setWindowTitle("请设置金字塔参数");
     dialog_size->setFixedHeight(200);
@@ -692,9 +705,12 @@ void VideoUI::on_action_pyramid_triggered()
     buttons.addWidget(dialog_size->btn_size_cancel);
     layout.addLayout(&buttons);
     QObject::connect(dialog_size->btn_size_ok,SIGNAL(clicked()),this,SLOT(do_pyramid_ok_cliked()));
-    QObject::connect(dialog_size->btn_size_ok,SIGNAL(clicked(bool)),dialog_size,SLOT(accept()));
+    QObject::connect(dialog_size->btn_size_ok,SIGNAL(clicked()),dialog_size,SLOT(accept()));
     QObject::connect(dialog_size->btn_size_cancel,SIGNAL(clicked(bool)),dialog_size,SLOT(close()));
     dialog_size->exec();
+*/
+
+
 }
 
 
@@ -702,7 +718,19 @@ void VideoUI::on_action_pyramid_triggered()
 void VideoUI::on_action_watermark_triggered()
 
 {   //存在问题 在关掉open窗口后 还会弹出坐标对话框
-    this->Open();
+    //this->Open();
+    //this->Mark();
+    isMark = false;
+    QString name = QFileDialog::getOpenFileName(this, "Select Image：");
+    if (name.isEmpty()) {
+            return;
+    }
+    std::string file = name.toLocal8Bit().data();
+    cv::Mat mark = cv::imread(file);
+    if (mark.empty()) return;
+
+
+
     dialog_size=new MyDialog();
     dialog_size->setWindowTitle("请设置水印参数");
     dialog_size->setFixedHeight(200);
@@ -738,6 +766,9 @@ void VideoUI::on_action_watermark_triggered()
     QObject::connect(dialog_size->btn_size_ok,SIGNAL(clicked(bool)),dialog_size,SLOT(accept()));
     QObject::connect(dialog_size->btn_size_cancel,SIGNAL(clicked(bool)),dialog_size,SLOT(close()));
     dialog_size->exec();
+    VideoThread::Get()->SetMark(mark);
+    isMark = true;
+    this->Set();
 }
 
 //这两个没有测试

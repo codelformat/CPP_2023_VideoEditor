@@ -82,6 +82,7 @@ public:
     void set_start_time();
     void set_end_time();
     //void set_menu_rotation();
+    bool openFile();
 
     std::string fileUrl;
 };
