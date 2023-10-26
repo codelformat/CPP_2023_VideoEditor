@@ -77,6 +77,10 @@ private slots:
 
     void on_action_sketch_triggered();
 
+    void on_action_dewatermark_triggered();
+
+    void on_action_stream_triggered();
+
 public slots:
     void do_des_clip(double xRatio,double yRatio,double widthRatio,double heightRatio);
 private:

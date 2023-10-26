@@ -1007,6 +1007,10 @@ font: 700 10pt &quot;Calibri&quot;;
    </property>
   </action>
   <action name="action_dewatermark">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/eraser.png</normaloff>:/VideoUI/Resources/eraser.png</iconset>
+   </property>
    <property name="text">
     <string>去水印</string>
    </property>
@@ -1015,6 +1019,10 @@ font: 700 10pt &quot;Calibri&quot;;
    </property>
   </action>
   <action name="action_stream">
+   <property name="icon">
+    <iconset resource="VideoUI.qrc">
+     <normaloff>:/VideoUI/Resources/livestream.png</normaloff>:/VideoUI/Resources/livestream.png</iconset>
+   </property>
    <property name="text">
     <string>推流</string>
    </property>

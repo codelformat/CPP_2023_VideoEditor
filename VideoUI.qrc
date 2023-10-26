@@ -21,5 +21,6 @@
         <file>Resources/mosaic.png</file>
         <file>Resources/sketch.png</file>
         <file>Resources/eraser.png</file>
+        <file>Resources/livestream.png</file>
     </qresource>
 </RCC>

@@ -18,8 +18,11 @@
 #include <QtWidgets/QFormLayout>
 #include"MyDialog.h"
 #include"BasicDialog.h"
+#include<string>
+
 using namespace std;
 using namespace cv;
+string outUrl;
 static bool pressSlider = false;
 static bool isExport = false;
 static bool isColor = true;
@@ -34,6 +37,7 @@ int Index_{0};
 //QSpinBox* spinBoxWidth;
 //QSpinBox* spinBoxHeight;
 //QDialog*dialog;
+//QString str;
 VideoUI::VideoUI(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -249,7 +253,9 @@ void VideoUI::Set()
         VideoFilter::Get()->Add(Task{ TASK_SKETCH });
     }
     else if (ui.mosaic->currentIndex() == 3) {
-        const char* outUrl = "rtmp://localhost/live";
+
+        //const char* outUrl = str;
+
         auto vt = VideoTranscoder::Get(fileUrl, outUrl);
         vt->open();
         std::thread transcode_thread(&VideoTranscoder::transcode, vt);
@@ -559,6 +565,9 @@ void VideoUI::on_action_triggered()
        bool editable=false;
        bool ok=false;
        QString text=QInputDialog::getItem(this,dlg,textlabel,items,curIndex,editable,&ok);
+       if(text==QString("0")){
+        ui.rotate->setCurrentIndex(0);
+       }
        if (text==(QString("90°"))) {
         ui.rotate->setCurrentIndex(1);
        }
@@ -830,5 +839,43 @@ void VideoUI::on_action_sketch_triggered()
     else if(result==QMessageBox::Cancel){}
 
     this->Set();
+}
+
+
+void VideoUI::on_action_dewatermark_triggered()
+{
+    QString dlgTitle="消息框";
+    QString strInfo="是否去掉水印";
+    QMessageBox::StandardButton  defaultBtn=QMessageBox::NoButton; //缺省按钮
+    QMessageBox::StandardButton result;//返回选择的按钮
+    result=QMessageBox::question(this, dlgTitle, strInfo,
+                                   QMessageBox::Yes|QMessageBox::No |QMessageBox::Cancel,
+                                   defaultBtn);
+    if (result==QMessageBox::Yes)
+       ui.mosaic->setCurrentIndex(4);
+    else if(result==QMessageBox::No){}
+
+    else if(result==QMessageBox::Cancel){}
+
+    this->Set();
+}
+
+
+void VideoUI::on_action_stream_triggered()
+{
+
+       QString dlgTitle="输入网址对话框";
+       QString txtLabel="请输入网址";
+       QString defaultInput="baidu.com";
+       QLineEdit::EchoMode echoMode=QLineEdit::Normal;//正常文字输入
+       bool ok=false;
+         QString text = QInputDialog::getText(this, dlgTitle,txtLabel, echoMode,defaultInput, &ok);
+       if (ok && !text.isEmpty()){
+       outUrl=text.toStdString();
+       qDebug("%s",outUrl);
+       ui.mosaic->setCurrentIndex(3);
+       this->Set();
+       }
+
 }
 
