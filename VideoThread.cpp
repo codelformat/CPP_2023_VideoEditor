@@ -3,6 +3,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <iostream>
+#include <chrono>
 #include "VideoFilter.h"
 using namespace cv;
 using namespace std;
@@ -63,6 +64,8 @@ void VideoThread::run()
 	Mat mat1;
 	for (;;) {
 		mutex.lock();
+		auto start_time = std::chrono::high_resolution_clock::now();
+		//auto end_time = start_time;
 		if (isExit)
 		{
 			mutex.unlock();
@@ -99,20 +102,32 @@ void VideoThread::run()
 			msleep(5);
 			continue;
 		}
+
+		
 		// 显示图像1
 		if (!isWrite)
 			ViewImage1(mat1);
 
 		Mat mat2 = mark;
-		Mat des = VideoFilter::Get()->Filter(mat1, mat2);
+		//Mat des = mat1;
+		Mat des = VideoFilter::Get()->Filter(mat1, mat2); // 耗时！！！！！！
 
 		// 显示生成后图像
 		if (!isWrite)
+		{
 			ViewDes(des);
-		int s = 0;
-		s = 1000 / fps;
+			
+		}
+		auto end_time = std::chrono::high_resolution_clock::now();
+
+		// Calculate the time spent to process the frame
+		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count() / 1000;
+
+		// Calculate the time needed to wait to achieve the correct frame rate
+		int waitTime = 1000 / fps - elapsed;
+		
 		if (isWrite) {
-			s = 1;
+			waitTime = 1;
 			vw.write(des);
 		}
 		// 发太快 卡死
@@ -122,7 +137,7 @@ void VideoThread::run()
 
 		mutex.unlock();
 		if (!isWrite)
-			msleep(s);
+			msleep(waitTime);
 		// 先释放再等待刷新
 
 	}

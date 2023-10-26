@@ -9,62 +9,65 @@ public:
 	QMutex mutex;
 	virtual cv::Mat Filter(cv::Mat mat1, cv::Mat mat2) {
 		mutex.lock();
-		ImageProcess p;
-		p.Set(mat1, mat2);
+		auto p = ImageProcess::Get();
+		p->Set(mat1, mat2);
 		for (int i = 0; i < tasks.size(); i++) {
 			switch (tasks[i].type) {
 			case TASK_GAIN:
 				// 亮度对比度调整
-				p.Gain(tasks[i].para[0], tasks[i].para[1]);
+				p->Gain(tasks[i].para[0], tasks[i].para[1]);
 				break;
 			case TASK_ROTATE90:
-				p.Rotate90();
+				p->Rotate90();
 				break;
 			case TASK_ROTATE180:
-				p.Rotate180();
+				p->Rotate180();
 				break;
 			case TASK_ROTATE270:
-				p.Rotate270();
+				p->Rotate270();
 				break;
 			case TASK_FLIPX:
-				p.FlipX();
+				p->FlipX();
 				break;
 			case TASK_FLIPY:
-				p.FlipY();
+				p->FlipY();
 				break;
 			case TASK_FILPXY:
-				p.FlipXY();
+				p->FlipXY();
 				break;
 			case TASK_RESIZE:
-				p.Resize(tasks[i].para[0], tasks[i].para[1]);
+				p->Resize(tasks[i].para[0], tasks[i].para[1]);
 				break;
 			case TASK_PYDOWN:
-				p.PyDown(tasks[i].para[0]);
+				p->PyDown(tasks[i].para[0]);
 				break;
 			case TASK_PYUP:
-				p.PyUp(tasks[i].para[0]);
+				p->PyUp(tasks[i].para[0]);
 				break;
 			case TASK_CLIP:
-				p.Clip(tasks[i].para[0], tasks[i].para[1], tasks[i].para[2], tasks[i].para[3]);
+				p->Clip(tasks[i].para[0], tasks[i].para[1], tasks[i].para[2], tasks[i].para[3]);
 				break;
 			case TASK_GRAY:
-				p.Gray();
+				p->Gray();
 				break;
 			case TASK_MASK:
-				p.Mark(tasks[i].para[0], tasks[i].para[1], tasks[i].para[2]);
+				p->Mark(tasks[i].para[0], tasks[i].para[1], tasks[i].para[2]);
 				break;
 			case TASK_MOSAIC:
-				p.Mosaic();
+				p->Mosaic();
 				break;
 			case TASK_SKETCH:
-				p.Sketch();
+				p->Sketch();
+				break;
+			case TASK_REMOVE_WATERMARK:
+				p->removeWatermark();
 				break;
 			default:
 				break;
 			}
 		}
 
-		cv::Mat re = p.Get();
+		cv::Mat re = p->getMat();
 		mutex.unlock();
 		return re;
 	}

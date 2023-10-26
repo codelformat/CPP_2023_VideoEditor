@@ -605,6 +605,16 @@ border-radius: 5px;
             <string>2</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>3</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>4</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>
@@ -847,6 +857,8 @@ font: 700 10pt &quot;Calibri&quot;;
    <addaction name="action_watermark"/>
    <addaction name="action_mosaic"/>
    <addaction name="action_sketch"/>
+   <addaction name="action_dewatermark"/>
+   <addaction name="action_stream"/>
   </widget>
   <action name="action_open">
    <property name="icon">
@@ -994,6 +1006,22 @@ font: 700 10pt &quot;Calibri&quot;;
     <string>素描图</string>
    </property>
   </action>
+  <action name="action_dewatermark">
+   <property name="text">
+    <string>去水印</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="action_stream">
+   <property name="text">
+    <string>推流</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -1025,8 +1053,8 @@ font: 700 10pt &quot;Calibri&quot;;
    <slot>SlidePress()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>262</x>
-     <y>670</y>
+     <x>345</x>
+     <y>462</y>
     </hint>
     <hint type="destinationlabel">
      <x>282</x>
@@ -1041,8 +1069,8 @@ font: 700 10pt &quot;Calibri&quot;;
    <slot>SlideRelease()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>234</x>
-     <y>670</y>
+     <x>317</x>
+     <y>462</y>
     </hint>
     <hint type="destinationlabel">
      <x>255</x>
@@ -1057,8 +1085,8 @@ font: 700 10pt &quot;Calibri&quot;;
    <slot>SetPos(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>201</x>
-     <y>670</y>
+     <x>284</x>
+     <y>462</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -1073,8 +1101,8 @@ font: 700 10pt &quot;Calibri&quot;;
    <slot>Left(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>100</x>
-     <y>650</y>
+     <x>183</x>
+     <y>440</y>
     </hint>
     <hint type="destinationlabel">
      <x>68</x>
@@ -1089,8 +1117,8 @@ font: 700 10pt &quot;Calibri&quot;;
    <slot>Right(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>174</x>
-     <y>704</y>
+     <x>257</x>
+     <y>484</y>
     </hint>
     <hint type="destinationlabel">
      <x>365</x>
@@ -1105,8 +1133,8 @@ font: 700 10pt &quot;Calibri&quot;;
    <slot>Pause()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>430</x>
-     <y>730</y>
+     <x>486</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
      <x>242</x>
@@ -1121,8 +1149,8 @@ font: 700 10pt &quot;Calibri&quot;;
    <slot>Mark()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>67</x>
-     <y>793</y>
+     <x>80</x>
+     <y>524</y>
     </hint>
     <hint type="destinationlabel">
      <x>-29</x>
@@ -1137,8 +1165,8 @@ font: 700 10pt &quot;Calibri&quot;;
    <slot>Play()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>390</x>
-     <y>730</y>
+     <x>441</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
      <x>185</x>

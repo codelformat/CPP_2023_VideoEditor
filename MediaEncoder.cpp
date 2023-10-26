@@ -50,14 +50,12 @@ public:
 		av_packet_unref(&apack);
 	}
 
-
-
 	bool InitAudioCodec() override {
 		///4.初始化音频编码器
 		if (!CreateCodec(AV_CODEC_ID_AAC)) {
 			return false;
 		}
-		ac->bit_rate = 317 * 1000; // 比特率
+		ac->bit_rate = bit_rate; // 比特率
 		ac->sample_rate = sampleRate; // 采样率
 		ac->sample_fmt = (AVSampleFormat)outSampleFmt; // 采样格式
 		ac->channels = channels; // 声道数量
@@ -89,7 +87,10 @@ public:
 
 		int ret = avcodec_send_frame(ac, pcm);
 		if (ret != 0) {
-			std::cout << "avcodec_send_frame failed!" << std::endl;
+			char err[1024] = { 0 };
+			av_strerror(ret, err, sizeof(err) - 1);
+			std::cout << err << std::endl;
+			getchar();
 			return NULL;
 		}
 
@@ -109,7 +110,10 @@ public:
 		frame->pts = vpts++;
 		int ret = avcodec_send_frame(vc, frame);
 		if (ret != 0) {
-			std::cout << "avcodec_send_frame failed!" << std::endl;
+			char err[1024] = { 0 };
+			av_strerror(ret, err, sizeof(err) - 1);
+			std::cout << err << std::endl;
+			getchar();
 			return NULL;
 		}
 
@@ -179,6 +183,7 @@ public:
 	bool InitResample() override {
 		/////音频重采样
 	////视频格式为Float，符合aac编码，不用重采样
+		
 		asc = swr_alloc_set_opts(NULL,
 			av_get_default_channel_layout(channels), (AVSampleFormat)outSampleFmt, sampleRate,//输出格式
 			av_get_default_channel_layout(channels), (AVSampleFormat)inSampleFmt, sampleRate, 0, 0);//输入格式
@@ -222,6 +227,7 @@ public:
         );
 		if (len <= 0)
 		{
+			cout << "Resample failed!" << endl;
 			return NULL;
 		}
 
@@ -249,6 +255,7 @@ public:
 
 	CMediaEncoder() {}
 	~CMediaEncoder(){}
+	
 private:
 	bool OpenCodec(AVCodecContext** c) {
 		//打开音频编码器
@@ -264,7 +271,7 @@ private:
 		return true;
 	}
 	bool CreateCodec(AVCodecID cid) {
-		const AVCodec* codec = avcodec_find_encoder(cid);
+		const AVCodec* codec = avcodec_find_decoder(cid);
 		if (!codec) {
 			std::cout << "avcodec_find_encoder " << cid << " failed!" << std::endl;
 			return false;

@@ -1,13 +1,13 @@
 #ifndef BASICDIALOG_H
 #define BASICDIALOG_H
-#include <QDialog>
-#include<QPushButton>
-#include<QSpinBox>
-#include<QLayout>
-#include<QHBoxLayout>
-#include<QVBoxLayout>
-#include<QFormLayout>
-#include<QLabel>
+#include <QtWidgets/QDialog>
+#include<QtWidgets/QPushButton>
+#include<QtWidgets/QSpinBox>
+#include<QtWidgets/QLayout>
+#include<QtWidgets/QHBoxLayout>
+#include<QtWidgets/QVBoxLayout>
+#include<QtWidgets/QFormLayout>
+#include<QtWidgets/QLabel>
 class BasicDialog :public QDialog{
     Q_OBJECT
 

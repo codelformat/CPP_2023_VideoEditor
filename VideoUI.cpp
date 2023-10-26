@@ -1,7 +1,7 @@
 #include "VideoUI.h"
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
-#include <QMenu>
+#include <QtWidgets/QMenu>
 #include <iostream>
 #include <string>
 #include <opencv2/highgui.hpp>
@@ -10,11 +10,12 @@
 #include <QtCore/QFile>
 #include "VideoThread.h"
 #include "VideoFilter.h"
+#include "VideoTranscoder.h"
 #include "AudioThread.h"
 #include "DrawingWidget.h"
-#include<QToolButton>
-#include<QInputDialog>
-#include <QFormLayout>
+#include<QtWidgets/QToolButton>
+#include<QtWidgets/QInputDialog>
+#include <QtWidgets/QFormLayout>
 #include"MyDialog.h"
 #include"BasicDialog.h"
 using namespace std;
@@ -246,6 +247,28 @@ void VideoUI::Set()
     }
     else if (ui.mosaic->currentIndex() == 2) {
         VideoFilter::Get()->Add(Task{ TASK_SKETCH });
+    }
+    else if (ui.mosaic->currentIndex() == 3) {
+        const char* outUrl = "rtmp://localhost/live";
+        auto vt = VideoTranscoder::Get(fileUrl, outUrl);
+        vt->open();
+        std::thread transcode_thread(&VideoTranscoder::transcode, vt);
+
+        std::thread ffplay_thread([&]() {
+            string cmd = "ffplay ";
+            cmd += outUrl;
+            system(cmd.c_str());
+
+            vt->stopTranscoding();
+        });
+
+        transcode_thread.join();
+        ffplay_thread.join();
+
+        vt->stopTranscoding();
+    }
+    else if (ui.mosaic->currentIndex() == 4) {
+        VideoFilter::Get()->Add(Task{TASK_REMOVE_WATERMARK });
     }
 
     //图像旋转 1:90,2:180,3:270
