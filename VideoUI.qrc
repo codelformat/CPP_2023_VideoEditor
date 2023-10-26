@@ -1,8 +1,24 @@
 <RCC>
-  <qresource prefix="VideoUI">
-    <file>Resources/pauseN.png</file>
-    <file>Resources/pauseP.png</file>
-    <file>Resources/playN.png</file>
-    <file>Resources/playP.png</file>
-  </qresource>
+    <qresource prefix="/VideoUI">
+        <file>Resources/pauseN.png</file>
+        <file>Resources/pauseP.png</file>
+        <file>Resources/playN.png</file>
+        <file>Resources/playP.png</file>
+        <file>Resources/openicon.png</file>
+        <file>Resources/export.png</file>
+        <file>Resources/open.png</file>
+        <file>Resources/set.png</file>
+        <file>Resources/rotate.png</file>
+        <file>Resources/mirror.png</file>
+        <file>Resources/rgb.png</file>
+        <file>Resources/hui.png</file>
+        <file>Resources/grey.png</file>
+        <file>Resources/pyramid.png</file>
+        <file>Resources/size.png</file>
+        <file>Resources/cut.png</file>
+        <file>Resources/watermark.png</file>
+        <file>Resources/images (1).png</file>
+        <file>Resources/mosaic.png</file>
+        <file>Resources/sketch.png</file>
+    </qresource>
 </RCC>

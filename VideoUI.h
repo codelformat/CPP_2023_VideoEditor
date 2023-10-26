@@ -1,10 +1,14 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
+
 #include <QtCore/qmutex.h>
+
+#include <QtWidgets/QMainWindow>
+
 #include "ui_VideoUI.h"
 
-class VideoUI : public QWidget
+class VideoUI : public QMainWindow
 {
     Q_OBJECT
 
@@ -20,21 +24,21 @@ public slots:
     void SlidePress();
     void SlideRelease();
 
-    // »¬¶¯ÌõÍÏ¶¯
+    // æ»‘åŠ¨æ¡æ‹–åŠ¨
     void SetPos(int);
     void Left(int pos);
     void Right(int pos);
 
-    // ÉèÖÃ¹ıÂËÆ÷
+    // è®¾ç½®è¿‡æ»¤å™¨
     void Set();
 
-    //µ¼³öÊÓÆµ
+    //å¯¼å‡ºè§†é¢‘
     void Export();
 
-    //µ¼³öÊÓÆµ½áÊø
+    //å¯¼å‡ºè§†é¢‘ç»“æŸ
     void ExportEnd();
 
-    // Ìí¼ÓË®Ó¡°´ÏÂ
+    // æ·»åŠ æ°´å°æŒ‰ä¸‹
     void Mark();
 
 
@@ -47,6 +51,32 @@ private slots:
     void do_value_left();
     void do_value_right();
     void do_value_cur();
+    void on_action_open_triggered();
+
+    void on_action_set_triggered();
+
+    void on_action_export_triggered();
+
+    void on_action_triggered();
+
+    void on_action_mirror_triggered();
+
+    void on_action_greyscale_triggered();
+
+    void on_action_RGB_triggered();
+
+    void on_action_size_triggered();
+    void do_size_ok_cliked();
+
+    void on_action_pyramid_triggered();
+    void do_pyramid_ok_clicked();
+    void do_watermark_ok_clicked();
+    void on_action_watermark_triggered();
+
+    void on_action_mosaic_triggered();
+
+    void on_action_sketch_triggered();
+
 public slots:
     void do_des_clip(double xRatio,double yRatio,double widthRatio,double heightRatio);
 private:
@@ -56,6 +86,8 @@ public:
     QMutex mutex;
     void set_start_time();
     void set_end_time();
+    //void set_menu_rotation();
+    bool openFile();
 
     std::string fileUrl;
 };

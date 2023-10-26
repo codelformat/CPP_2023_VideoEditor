@@ -11,19 +11,7 @@
 #include <chrono>
 #include <string>
 #include <thread>
-//#include <QtMultimedia/QAudioInput>
-//#include <QtMultimedia/QAudioFormat>
-//#include <QtMultimedia/QAudioDevice>
-//#include <QtMultimedia/qmediadevices.h>
-//#include <QtMultimedia/qaudiosource.h>
 
-//extern "C"
-//{
-//#include <libavformat/avformat.h> // test
-//#include <libswresample/swresample.h>
-//#include <libavcodec/avcodec.h>
-//#include <libswscale/swscale.h>
-//}
 #include "MediaEncoder.h"
 #include "Rtmp.h"
 
