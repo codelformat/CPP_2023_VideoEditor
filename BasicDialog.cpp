@@ -32,6 +32,20 @@ BasicDialog::BasicDialog(QSpinBox* receiver1,QSpinBox* receiver2,QWidget* parent
     connect(btn_size_cancel,SIGNAL(clicked()),this,SLOT(close()));
 
 }
+/*
+BasicDialog::BasicDialog(std::initializer_list<QLabel> labels,std::initializer_list<QSpinBox> boxes, QWidget *parent)
+    :QDialog(parent){
+    this->setAttribute(Qt::WA_DeleteOnClose);
+    this->setFixedHeight(200);
+    this->setFixedWidth(300);
+    //pLabel=new QVector<QLabel>{labels};
+    //pSpinBox=new QVector<QSpinBox>{boxes};
+
+
+
+}
+*/
+
 void BasicDialog::sendMessageAndClose(){
     receiver1->setValue(spinBoxWidth->value());
     receiver2->setValue(spinBoxHeight->value());

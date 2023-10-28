@@ -41,7 +41,7 @@ public slots:
     // 添加水印按下
     void Mark();
 
-
+    void PlayOrPause(bool status);
 
 private slots:
     void do_value_bright(int val);
@@ -92,6 +92,8 @@ public:
     void set_end_time();
     //void set_menu_rotation();
     bool openFile();
-
+    void hideLayout(QLayout* layout);
+    void enableLayout(QLayout* layout);
+    void setLayoutVisible(QLayout* layout, bool enable);
     std::string fileUrl;
 };

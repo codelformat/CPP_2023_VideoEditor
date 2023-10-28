@@ -76,6 +76,7 @@ VideoUI::VideoUI(QWidget *parent)
     QObject::connect(ui.playSlider,SIGNAL(valueChanged(int)),this,SLOT(do_value_cur()));
 
     ui.pauseButton->hide();
+    ui.playButton->setCheckable(true);
     //组件的位置可能要调整下
 //    ui.color->hide();
 //    ui.ma->hide();
@@ -88,6 +89,14 @@ VideoUI::VideoUI(QWidget *parent)
 //    ui.height->hide();
 //    ui.mosaic->hide();
 
+
+
+    //hideLayout(ui.horizontalLayout_9);
+    //ui.playButton->setVisible(true);
+    setLayoutVisible(ui.horizontalLayout_9,false);
+    ui.playButton->setVisible(true);
+    ui.playButton->setCheckable(true);
+    this->resize(1000,600);
 
     ui.stackedLayout->QStackedLayout::setStackingMode(QStackedLayout::StackAll);
     connect(ui.drawRect,SIGNAL(clipSignal(double,double,double,double)),this,SLOT(do_des_clip(double,double,double,double)));
@@ -144,7 +153,24 @@ void VideoUI::Pause() {
     VideoThread::Get()->Pause();
     ui.pauseButton->hide();
 }
-
+void VideoUI::PlayOrPause(bool status){
+    if(VideoThread::Get()->isThreadOpen())
+    {
+        //ui.pauseButton->show();
+        //ui.pauseButton->setGeometry(ui.playButton->geometry());
+        if(status){
+            this->Right(999);
+            this->Left(0);
+            VideoThread::Get()->Play();
+            ui.playButton->setGeometry(ui.pauseButton->geometry());
+        }
+        else{
+            VideoThread::Get()->Pause();
+            //ui.playButton->setGeometry()
+        }
+        //ui.playButton->hide();
+    }
+}
 void VideoUI::SlidePress()
 {
     pressSlider = true;
@@ -162,7 +188,7 @@ void VideoUI::SetPos(int pos)
 
 void VideoUI::Left(int pos) {
     VideoThread::Get()->SetBegin((double)pos / 1000.);
-    SetPos(pos);
+    //SetPos(pos);
 
 }
 void VideoUI::Right(int pos) {
@@ -314,7 +340,7 @@ void VideoUI::Export() {
         // 停止导出
         VideoThread::Get()->StopSave();
         isExport = false;
-       ui.action_export->setText("Export");
+       ui.action_export->setText("导出");
         return;
     }
     // 开始导出
@@ -335,7 +361,7 @@ void VideoUI::Export() {
 void VideoUI::ExportEnd() {
     isExport = false;
     //QString name = "Export";
-    ui.action_export->setText("Export");
+    ui.action_export->setText("导出");
     string src = VideoThread::Get()->srcFile;
     string des = VideoThread::Get()->desFile;
     int ss = 0;
@@ -552,6 +578,7 @@ void VideoUI::on_action_set_triggered()
 void VideoUI::on_action_export_triggered()
 {
        this->Export();
+       this->ExportEnd();
 }
 
 
@@ -879,3 +906,44 @@ void VideoUI::on_action_stream_triggered()
 
 }
 
+void VideoUI::hideLayout(QLayout *layout){
+    for (int i = 0; i < layout->count(); ++i) {
+       QLayoutItem* w = layout->itemAt(i);
+       if (w != nullptr){
+            if(w->widget()){
+                w->widget()->setVisible(false);
+            }
+            else if(w->layout()){
+                hideLayout(w->layout());
+            }
+       }
+    }
+}
+
+void VideoUI::enableLayout(QLayout *layout){
+    for (int i = 0; i < layout->count(); ++i) {
+       QLayoutItem* w = layout->itemAt(i);
+       if (w != nullptr){
+            if(w->widget()){
+                w->widget()->setVisible(true);
+            }
+            else if(w->layout()){
+                enableLayout(w->layout());
+            }
+       }
+    }
+}
+
+void VideoUI::setLayoutVisible(QLayout *layout, bool enable){
+    for (int i = 0; i < layout->count(); ++i) {
+       QLayoutItem* w = layout->itemAt(i);
+       if (w != nullptr){
+            if(w->widget()){
+                w->widget()->setVisible(enable);
+            }
+            else if(w->layout()){
+                setLayoutVisible(w->layout(),enable);
+            }
+       }
+    }
+}
