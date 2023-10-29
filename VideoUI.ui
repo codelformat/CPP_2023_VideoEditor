@@ -1182,6 +1182,22 @@ font: 700 10pt &quot;Calibri&quot;;
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>right</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>VideoUIClass</receiver>
+   <slot>Right(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>767</x>
+     <y>472</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>705</x>
+     <y>-92</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>Open()</slot>

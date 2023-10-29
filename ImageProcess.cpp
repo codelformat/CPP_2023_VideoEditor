@@ -90,16 +90,39 @@ void ImageProcess::Gray() {
 
 // 水印
 void ImageProcess::Mark(int x, int y, double a) {
-	if(des.empty()) return;
+	if (des.empty()) return;
 	if (src2.empty()) return;
 	if (x < 0 || y < 0) return;
+	if (src2.channels() < 4) {
+		// 如果图像没有alpha通道，为它创建一个（全部非透明）
+		std::cout << "Get alpha!" << std::endl;
+		uchar alpha_value = static_cast<uchar>(a * 255);
+		cv::Mat alpha(src2.size(), CV_8UC1, cv::Scalar(alpha_value));
+		cv::Mat temp;
+		cv::merge(std::vector<cv::Mat>{src2, alpha}, temp);
+		src2 = temp;
+	}
 
+	// 如果水印图像大于目标视频帧，则缩放水印图像
+	if (src2.rows > des.rows || src2.cols > des.cols) {
+		double scale = std::min(static_cast<double>(des.rows) / src2.rows, static_cast<double>(des.cols) / src2.cols);
+		cv::resize(src2, src2, cv::Size(), scale, scale);
+	}
 	/*
 	// 还未考虑图片大小大于视频分辨率的情况
 	*/
-	Mat roi = des(Rect(x, y, src2.cols, src2.rows));
-	addWeighted(src2, a, roi, 1 - a, 0, roi);
-
+	cv::Mat roi = des(cv::Rect(x, y, src2.cols, src2.rows));
+	/*addWeighted(src2, a, roi, 1 - a, 0, roi);*/
+	for (int i = 0; i < src2.rows; ++i) {
+		for (int j = 0; j < src2.cols; ++j) {
+			cv::Vec4b& pixel = src2.at<cv::Vec4b>(i, j);
+			float alpha = pixel[3] / 255.0;
+			cv::Vec3b& roiPixel = roi.at<cv::Vec3b>(i, j);
+			for (int k = 0; k < 3; ++k) {
+				roiPixel[k] = static_cast<uchar>(pixel[k] * alpha + roiPixel[k] * (1 - alpha));
+			}
+		}
+	}
 }
 
 //void ImageProcess::Mosaic() {
@@ -199,9 +222,9 @@ void ImageProcess::removeWatermark() {
 
 	//提取图片下方的水印，制作掩模图像
 	Mat mask = Mat::zeros(des.size(), CV_8U);
-	int height = des.rows;
+	int height = des.rows* 0.2;
 	int width = des.cols;
-	int start = 0.9 * height;
+	int start = 0.0 * height;
 	//遍历图像像素，提取出水印部分像素，制作掩模图像
 #pragma omp parallel for
 	for (int i = start; i < height; i++)

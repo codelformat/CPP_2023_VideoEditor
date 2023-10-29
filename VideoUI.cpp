@@ -2,6 +2,7 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QMenu>
+#include <QtGui/QImage>
 #include <iostream>
 #include <string>
 #include <opencv2/highgui.hpp>
@@ -98,7 +99,7 @@ VideoUI::VideoUI(QWidget *parent)
 void VideoUI::timerEvent(QTimerEvent* e) {
     if (pressSlider) return;
     double pos = VideoThread::Get()->GetPos();
-    ui.playSlider->setValue(pos*1000);
+    ui.playSlider->setValue(pos* ui.playSlider->maximum());
 }
 
 
@@ -157,17 +158,20 @@ void VideoUI::SlideRelease()
 
 void VideoUI::SetPos(int pos)
 {
-    VideoThread::Get()->Seek((double)pos / 1000.);
+    VideoThread::Get()->Seek((double)pos / (ui.playSlider->maximum() + 1));
 }
 
 void VideoUI::Left(int pos) {
-    VideoThread::Get()->SetBegin((double)pos / 1000.);
+    VideoThread::Get()->SetBegin((double)pos / (ui.playSlider->maximum() + 1));
+    double curPos = VideoThread::Get()->GetPos();
+
+    if(curPos < pos)
     SetPos(pos);
 
 }
 void VideoUI::Right(int pos) {
-    cout << "Set end!" << " " << (double)pos / 1000. << endl;
-    VideoThread::Get()->SetEnd((double)pos / 1000.);
+    cout << "Set end!" << " " << (double)pos / (ui.playSlider->maximum() + 1) << endl;
+    VideoThread::Get()->SetEnd((double)pos / (ui.playSlider->maximum() + 1));
 }
 
 void VideoUI::Set()
@@ -255,10 +259,12 @@ void VideoUI::Set()
     else if (ui.mosaic->currentIndex() == 3) {
 
         //const char* outUrl = str;
-
-        auto vt = VideoTranscoder::Get(fileUrl, outUrl);
-        vt->open();
-        std::thread transcode_thread(&VideoTranscoder::transcode, vt);
+        VideoThread::Get()->Pause();
+        auto vt = VideoTranscoder::Get();
+        vt->setUrl(fileUrl, outUrl);
+        vt->start();
+        /*vt->open();
+        std::thread transcode_thread(&VideoTranscoder::transcode, vt);*/
 
         std::thread ffplay_thread([&]() {
             string cmd = "ffplay ";
@@ -267,11 +273,10 @@ void VideoUI::Set()
 
             vt->stopTranscoding();
         });
-
-        transcode_thread.join();
         ffplay_thread.join();
 
         vt->stopTranscoding();
+        VideoThread::Get()->Play();
     }
     else if (ui.mosaic->currentIndex() == 4) {
         VideoFilter::Get()->Add(Task{TASK_REMOVE_WATERMARK });
@@ -324,6 +329,7 @@ void VideoUI::Export() {
     int w = ui.width->value();
     int h = ui.height->value();
 
+    cout << "UI's Export invoked! Filename: " << filename << endl;
     if (VideoThread::Get()->StartSave(filename,w,h, isColor))
     {
         isExport = true;
@@ -340,8 +346,8 @@ void VideoUI::ExportEnd() {
     string des = VideoThread::Get()->desFile;
     int ss = 0;
     int t = 0;
-    ss = VideoThread::Get()->totalMs * ((double)ui.left->value() / 1000.);
-    t = VideoThread::Get()->totalMs * ((double)ui.right->value() / 1000.) - ss;
+    ss = VideoThread::Get()->totalMs * ((double)ui.left->value() / (ui.left->maximum() + 1));
+    t = VideoThread::Get()->totalMs * ((double)ui.right->value() / (ui.right->maximum() + 1)) - ss;
 
     // 处理音频
     AudioThread::Get()->ExportAudio(src, src + ".mp3", ss, t);
@@ -360,12 +366,54 @@ void VideoUI::Mark() {
         return;
     }
     std::string file = name.toLocal8Bit().data();
-    cv::Mat mark = cv::imread(file);
+    /*cv::Mat mark = cv::imread(file, cv::IMREAD_UNCHANGED);*/
+    QImage qimage(name);
+    cv::Mat mark = imread(file, IMREAD_UNCHANGED);
     if (mark.empty()) return;
 
     VideoThread::Get()->SetMark(mark);
     isMark = true;
 }
+
+//Mat VideoUI::qImageToMat(const QImage& inImage, bool inCloneImageData = true) {
+//    switch (inImage.format())
+//    {
+//        // 8-bit, 4 channel
+//    case QImage::Format_ARGB32:
+//    case QImage::Format_ARGB32_Premultiplied:
+//    {
+//        cv::Mat  mat(inImage.height(), inImage.width(), CV_8UC4, const_cast<uchar*>(inImage.bits()), inImage.bytesPerLine());
+//
+//        return (inCloneImageData ? mat.clone() : mat);
+//    }
+//
+//    // 8-bit, 3 channel
+//    case QImage::Format_RGB32:
+//    {
+//        cv::Mat  mat(inImage.height(), inImage.width(), CV_8UC4, const_cast<uchar*>(inImage.bits()), inImage.bytesPerLine());
+//
+//        cv::Mat  matNoAlpha;
+//
+//        cv::cvtColor(mat, matNoAlpha, cv::COLOR_BGRA2BGR);   // drop the all-white alpha channel
+//
+//        return matNoAlpha;
+//    }
+//
+//    // 8-bit, 3 channel
+//    case QImage::Format_RGB888:
+//    {
+//        QImage   swapped = inImage.rgbSwapped();
+//
+//        return cv::Mat(swapped.height(), swapped.width(), CV_8UC3, const_cast<uchar*>(swapped.bits()), swapped.bytesPerLine()).clone();
+//    }
+//
+//    default:
+//        break;
+//    }
+//
+//    return cv::Mat();
+//}
+
 //连接滚动条和数值
 void VideoUI::do_value_bright(int val){
        ui.bright->setValue(val);
@@ -552,6 +600,7 @@ void VideoUI::on_action_set_triggered()
 void VideoUI::on_action_export_triggered()
 {
        this->Export();
+       //this->ExportEnd();
 }
 
 
@@ -866,7 +915,7 @@ void VideoUI::on_action_stream_triggered()
 
        QString dlgTitle="输入网址对话框";
        QString txtLabel="请输入网址";
-       QString defaultInput="baidu.com";
+       QString defaultInput="rtmp://localhost/live";
        QLineEdit::EchoMode echoMode=QLineEdit::Normal;//正常文字输入
        bool ok=false;
          QString text = QInputDialog::getText(this, dlgTitle,txtLabel, echoMode,defaultInput, &ok);

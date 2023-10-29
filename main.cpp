@@ -12,9 +12,6 @@
 #include <string>
 #include <thread>
 
-#include "MediaEncoder.h"
-#include "Rtmp.h"
-
 using namespace std;
 /**
 * ¿ª·¢²½Öè

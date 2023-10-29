@@ -87,6 +87,8 @@ void VideoThread::run()
 
 		int cur = cap1.get(CAP_PROP_POS_FRAMES);
 
+		cout << "cur: " << cur << ", " << flush;
+		cout << "end: " << end << endl;
 		// 读取一帧视频，解码并作颜色转换，在read中均做了
 		if (cur >= end || !cap1.read(mat1) || mat1.empty())
 		{
@@ -157,9 +159,11 @@ void VideoThread::SetBegin(double p) {
 
 void VideoThread::SetEnd(double p) {
 	mutex.lock();
+	cout << "Set End! " << endl;
 	double count = cap1.get(CAP_PROP_FRAME_COUNT);
 	int frame = p * count;
 	end = frame;
+	cout << end;
 	mutex.unlock();
 }
 
@@ -215,6 +219,9 @@ bool VideoThread::StartSave(const std::string filename, int width, int height, b
 	}
 	this->isWrite = true;
 	desFile = filename;
+	//10-28 modified
+	isPlay = true;
+
 	mutex.unlock();
 	return true;
 }

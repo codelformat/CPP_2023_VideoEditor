@@ -4,27 +4,34 @@
 #include <string>
 #include <chrono>
 #include <thread>
+#include <QtCore\QThread>
+#include <QtCore\QMutex>
 
 extern "C" {
 #include <libavformat/avformat.h>
 }
 
-class VideoTranscoder
+class VideoTranscoder:public QThread
 {
 public:
-    VideoTranscoder(const std::string& input, const std::string& output);
-    static VideoTranscoder* Get(const std::string& input, const std::string& output);
+    VideoTranscoder();
+    static VideoTranscoder* Get();
     ~VideoTranscoder();
 
     bool open();
     void transcode();
+    void setUrl(const std::string& input, const std::string& output);
 
     void stopTranscoding() {
         isRunning = false;
     }
     void close();
 
+    //线程入口函数
+    void run();
+
 private:
+    QMutex mutex;
     std::atomic<bool> isRunning = false;
 
     std::string inputUrl;

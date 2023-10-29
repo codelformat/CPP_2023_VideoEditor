@@ -41,7 +41,7 @@ public slots:
     // 添加水印按下
     void Mark();
 
-
+    //cv::Mat qImageToMat(const QImage& image, bool inCloneImageData);
 
 private slots:
     void do_value_bright(int val);

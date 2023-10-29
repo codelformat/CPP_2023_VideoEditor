@@ -5,18 +5,23 @@
 using namespace std::chrono;
 using namespace std;
 
-VideoTranscoder* VideoTranscoder::Get(const std::string& input, const std::string& output) {
-	static VideoTranscoder transcoder(input, output);
-	return &transcoder;
+VideoTranscoder* VideoTranscoder::Get() {
+    static VideoTranscoder transcoder;
+    return &transcoder;
 }
 
-VideoTranscoder::VideoTranscoder(const std::string& input, const std::string& output)
-    : inputUrl(input), outputUrl(output) {
+VideoTranscoder::VideoTranscoder() {
     avformat_network_init();
 }
 
-VideoTranscoder::~VideoTranscoder() {
-    close();
+void VideoTranscoder::setUrl(const std::string& input, const std::string& output) {
+	inputUrl = input;
+	outputUrl = output;
+}
+
+void VideoTranscoder::run() {
+    this->open();
+    this->transcode();
 }
 
 bool VideoTranscoder::open() {
@@ -160,5 +165,12 @@ void VideoTranscoder::close() {
         avformat_close_input(&in_ctx);
         in_ctx = nullptr;
     }
+}
+
+VideoTranscoder::~VideoTranscoder() {
+    mutex.lock();
+    isRunning = false;
+    mutex.unlock();
+    this->wait();
 }
 
