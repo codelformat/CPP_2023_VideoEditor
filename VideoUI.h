@@ -96,4 +96,19 @@ public:
     void enableLayout(QLayout* layout);
     void setLayoutVisible(QLayout* layout, bool enable);
     std::string fileUrl;
+
+    void resetAllIcons(QGridLayout* layout);
+    TabButton* findTabButton( int index,QGridLayout* layout);
+public:
+    static const int dockWidth;
+private:
+    QLabel* readyInfo=new QLabel("就绪",this);
+    QLabel* playInfo=new QLabel("正在播放",this);
+    QLabel* pauseInfo=new QLabel("暂停",this);
+    QLabel* exportInfo=new QLabel("正在导出",this);
+    //QHBoxLayout* statusLayout=new QHBoxLayout();
+    //QWidget* statusWidget=new QWidget();
+
+public slots:
+    void choosePage(int index);
 };

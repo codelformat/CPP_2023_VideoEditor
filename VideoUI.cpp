@@ -27,6 +27,9 @@ static bool pressSlider = false;
 static bool isExport = false;
 static bool isColor = true;
 static bool isMark = false;
+
+const int VideoUI::dockWidth=200;
+
 extern  VideoCapture cap1;
 bool isok=false;
 bool isClip=false;
@@ -96,12 +99,206 @@ VideoUI::VideoUI(QWidget *parent)
     setLayoutVisible(ui.horizontalLayout_9,false);
     ui.playButton->setVisible(true);
     ui.playButton->setCheckable(true);
-    this->resize(1000,600);
+
 
     ui.stackedLayout->QStackedLayout::setStackingMode(QStackedLayout::StackAll);
     connect(ui.drawRect,SIGNAL(clipSignal(double,double,double,double)),this,SLOT(do_des_clip(double,double,double,double)));
 
+
+
+
+    ui.menu_view->addAction(ui.sideDock->toggleViewAction());
+
+    ui.toolBar->setVisible(false);//暂时隐藏toolBar;
+
+    ui.sideDock->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
+    ui.sideDock->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetFloatable);
+    ui.sideDock->setWindowTitle("功能");
+    QWidget* titleBar=new QWidget(ui.sideDock);
+    titleBar->setMinimumHeight(0);
+    titleBar->setMaximumHeight(0);
+    ui.sideDock->setTitleBarWidget(titleBar);
+    ui.sideDock->setMinimumWidth(TabButton::fixSize);
+    //ui.sideDock->resize(80,400);
+    this->resizeDocks({ui.sideDock},{dockWidth},Qt::Horizontal);
+
+    connect(ui.tabButton0,&TabButton::signal_click,this,&VideoUI::choosePage);
+    connect(ui.tabButton1,&TabButton::signal_click,this,&VideoUI::choosePage);
+    connect(ui.tabButton2,&TabButton::signal_click,this,&VideoUI::choosePage);
+    connect(ui.tabButton3,&TabButton::signal_click,this,&VideoUI::choosePage);
+    connect(ui.tabButton4,&TabButton::signal_click,this,&VideoUI::choosePage);
+
+    choosePage(-1);
+    this->setMinimumHeight(500);
+    this->setMinimumWidth(600);
+    this->resize(800,550);
+
+
+    ui.statusBar->addWidget(readyInfo);
+    ui.statusBar->addWidget(playInfo);
+    ui.statusBar->addWidget(pauseInfo);
+    ui.statusBar->addWidget(exportInfo);
+
+    //ui.statusBar->removeWidget(playInfo);
+    //ui.statusBar->removeWidget(pauseInfo);
+    //ui.statusBar->removeWidget(exportInfo);
+    playInfo->setVisible(false);
+    pauseInfo->setVisible(false);
+    exportInfo->setVisible(false);
+    //statusBar()->setStyleSheet("QStatusBar::item {border: None;}");
+    //ui.statusBar->setStyleSheet("QStatusBar::item {border: None;}"
+    //                            "background-color: rgb(35, 170, 242);");
+
+
+
     startTimer(40); // 可根据fps设置定时器的时间
+}
+
+void VideoUI::choosePage(int index){
+
+    QObject* p=sender();
+    TabButton* button=qobject_cast<TabButton*>(p);
+    //来自按钮的信号
+    if(button){
+        //原来功能区未隐藏，且点击了当前按钮，则隐藏功能区
+        if(TabButton::curIndex==index){
+            //第一个if理论上不会执行
+            if(!ui.stackedWidget->isVisible()){
+
+                //选中,由不可见变可见
+                //int width=ui.sideDock->widget()->width();
+
+                ui.stackedWidget->setVisible(!ui.stackedWidget->isVisible());
+                ui.sideDock->setMinimumWidth(dockWidth);
+                ui.sideDock->setMaximumWidth(999999);//恢复可以扩大宽度
+                this->resizeDocks({ui.sideDock},{dockWidth},Qt::Horizontal);
+                ui.line_2->setVisible(!ui.line->isVisible());
+                ui.sideDock->setMinimumWidth(TabButton::fixSize);//恢复可以缩小宽度
+                TabButton::curIndex=index;
+
+                /*ui.pushButton_2->setIcon(ui.pushButton_2->img[0]);
+                ui.pushButton_3->setIcon(ui.pushButton_3->img[0]);
+                ui.pushButton_4->setIcon(ui.pushButton_4->img[0]);*/
+                resetAllIcons(ui.gridLayout);
+                button->setIcon(button->img[2]);
+            }
+            else{
+                //取消选中，并隐藏功能区
+                ui.stackedWidget->setVisible(!ui.stackedWidget->isVisible());
+                ui.line_2->setVisible(false);
+                this->resizeDocks({ui.sideDock},{TabButton::fixSize+2},Qt::Horizontal);
+                //设置成不可再改变宽度
+                ui.sideDock->setFixedWidth(TabButton::fixSize+2);//2需要根据左边距和线的宽度计算。
+                //ui.sideDock->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetFloatable);
+                TabButton::curIndex=-1;
+                /*ui.pushButton_2->setIcon(ui.pushButton_2->img[0]);
+                ui.pushButton_3->setIcon(ui.pushButton_3->img[0]);
+                ui.pushButton_4->setIcon(ui.pushButton_4->img[0]);*/
+                resetAllIcons(ui.gridLayout);
+                button->setIcon(button->img[1]);//还原为悬浮图标
+            }
+
+            //ui.stackedWidget->setCurrentIndex(-1);无法设置为-1
+        }
+        //原来功能区已隐藏，则显示功能区
+        else if(TabButton::curIndex==-1){
+            //选中,由不可见变可见
+            //int width=ui.sideDock->widget()->width();
+
+            ui.stackedWidget->setVisible(true);
+            ui.stackedWidget->setCurrentIndex(index);
+            ui.sideDock->setMinimumWidth(dockWidth);
+            ui.sideDock->setMaximumWidth(999999);//恢复可以扩大宽度
+            this->resizeDocks({ui.sideDock},{dockWidth},Qt::Horizontal);
+            ui.line_2->setVisible(true);
+            ui.sideDock->setMinimumWidth(TabButton::fixSize);//恢复可以缩小宽度
+            TabButton::curIndex=index;
+
+            resetAllIcons(ui.gridLayout);
+            button->setIcon(button->img[2]);
+
+
+
+
+
+        }
+        //原来功能区未隐藏，点击了其它按钮，则切换功能区页面
+        else{
+            ui.sideDock->setMaximumWidth(999999);//恢复可以扩大宽度
+            ui.stackedWidget->setCurrentIndex(index);
+            ui.stackedWidget->setVisible(true);
+            ui.line_2->setVisible(true);
+            int width=ui.sideDock->widget()->width();//保持原来宽度
+            this->resizeDocks({ui.sideDock},{width},Qt::Horizontal);
+            //this->resizeDocks({ui.sideDock},{dockWidth},Qt::Horizontal);
+            TabButton::curIndex=index;
+            resetAllIcons(ui.gridLayout);
+            button->setIcon(button->img[2]);
+        }
+    }
+    //信号不是由按钮发出
+    else{
+        //参数为-1，取消选中，并隐藏功能区
+        if(index==-1){
+
+            ui.stackedWidget->setVisible(!ui.stackedWidget->isVisible());
+            ui.line_2->setVisible(false);
+            this->resizeDocks({ui.sideDock},{TabButton::fixSize+2},Qt::Horizontal);
+            //设置成不可再改变宽度
+            ui.sideDock->setFixedWidth(TabButton::fixSize+6);//6需要根据边距计算。
+            TabButton::curIndex=-1;
+            resetAllIcons(ui.gridLayout);
+        }
+        //参数非-1，显示对应功能页
+        else if(index>=0&&index<=4){
+            ui.stackedWidget->setVisible(true);
+            ui.stackedWidget->setCurrentIndex(index);
+            ui.sideDock->setMinimumWidth(dockWidth);
+            ui.sideDock->setMaximumWidth(999999);//恢复可以扩大宽度
+            this->resizeDocks({ui.sideDock},{dockWidth},Qt::Horizontal);
+            ui.line_2->setVisible(true);
+            ui.sideDock->setMinimumWidth(TabButton::fixSize);//恢复可以缩小宽度
+            TabButton::curIndex=index;
+
+            resetAllIcons(ui.gridLayout);
+            //button->setIcon(button->img[2]);
+            button=findTabButton(index,ui.gridLayout);
+            if(button){
+                button->setIcon(button->img[2]);
+            }
+
+        }
+    }
+
+
+
+}
+
+void VideoUI::resetAllIcons(QGridLayout *layout){
+    for (int i = 0; i < layout->count(); ++i) {
+        QLayoutItem* w = layout->itemAt(i);
+        if (w){
+            TabButton* button=qobject_cast<TabButton*>(w->widget());
+            if(button){
+                button->resetIcon();
+            }
+        }
+    }
+}
+
+TabButton* VideoUI::findTabButton(int index, QGridLayout *layout){
+    for (int i = 0; i < layout->count(); ++i) {
+        QLayoutItem* w = layout->itemAt(i);
+        if (w){
+            TabButton* button=qobject_cast<TabButton*>(w->widget());
+            if(button){
+                if(button->index()==index){
+                    return button;
+                }
+            }
+        }
+    }
+    return nullptr;
 }
 
 void VideoUI::timerEvent(QTimerEvent* e) {

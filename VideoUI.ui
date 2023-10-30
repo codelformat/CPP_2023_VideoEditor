@@ -30,14 +30,7 @@
 QPushButton:!hover
 {
  
-
-	
-	/*background-color: rgb(65, 105, 225);*/
-	
-	
-	
-	/*background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 103, 250, 255), stop:1 rgba(25, 192, 255, 255));*/
-	background-color: rgb(30, 144, 255);
+	/*background-color: rgb(30, 144, 255);*/
 border: none;
 border-radius: 3px;
 color: rgb(255, 255,255);
@@ -47,7 +40,7 @@ QPushButton:hover
 {
 	
 	
-	background-color: rgb(0, 191, 255);
+	/*background-color: rgb(0, 191, 255);*/
 	   border: none;
 border-radius: 3px;
 color: rgb(255, 255,255);
@@ -108,7 +101,6 @@ QLabel
 	background-color: rgba(255, 255, 255, 0);
 }
 
-
 </string>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -120,10 +112,7 @@ QLabel
       </property>
       <item>
        <layout class="QStackedLayout" name="stackedLayout">
-        <item row="0" column="0">
-         <widget class="DrawingWidget" name="drawRect" native="true"/>
-        </item>
-        <item row="0" column="0">
+        <item row="0" column="1">
          <widget class="VideoWidget" name="src1">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -133,8 +122,8 @@ QLabel
           </property>
           <property name="minimumSize">
            <size>
-            <width>480</width>
-            <height>360</height>
+            <width>240</width>
+            <height>160</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -157,6 +146,9 @@ QLabel
           </property>
          </widget>
         </item>
+        <item row="0" column="1">
+         <widget class="DrawingWidget" name="drawRect" native="true"/>
+        </item>
        </layout>
       </item>
       <item>
@@ -169,8 +161,8 @@ QLabel
         </property>
         <property name="minimumSize">
          <size>
-          <width>480</width>
-          <height>360</height>
+          <width>240</width>
+          <height>160</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -815,6 +807,9 @@ border-radius: 5px;
    </layout>
   </widget>
   <widget class="QToolBar" name="toolBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="font">
     <font>
      <family>Calibri</family>
@@ -859,6 +854,336 @@ font: 700 10pt &quot;Calibri&quot;;
    <addaction name="action_sketch"/>
    <addaction name="action_dewatermark"/>
    <addaction name="action_stream"/>
+  </widget>
+  <widget class="QDockWidget" name="sideDock">
+   <property name="minimumSize">
+    <size>
+     <width>109</width>
+     <height>301</height>
+    </size>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QHBoxLayout" name="horizontalLayout_11">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <layout class="QGridLayout" name="gridLayout">
+       <property name="horizontalSpacing">
+        <number>0</number>
+       </property>
+       <property name="verticalSpacing">
+        <number>10</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="TabButton" name="tabButton0">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>45</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>45</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;所有设置&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border:none;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" rowspan="6">
+        <widget class="Line" name="line">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>2</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>2</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <stylestrategy>PreferAntialias</stylestrategy>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color:rgb(149, 236, 255)</string>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" rowspan="6" colspan="4">
+        <widget class="QStackedWidget" name="stackedWidget">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(246, 248, 250);</string>
+         </property>
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="page">
+          <widget class="QLabel" name="label_8">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>91</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>page1</string>
+           </property>
+          </widget>
+          <widget class="SwitchButton" name="widget" native="true">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>130</y>
+             <width>41</width>
+             <height>16</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_2">
+          <widget class="QLabel" name="label_9">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>70</y>
+             <width>111</width>
+             <height>51</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>page2</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_3">
+          <widget class="QLabel" name="label_10">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>50</y>
+             <width>54</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>page3</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_4"/>
+         <widget class="QWidget" name="page_5"/>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="TabButton" name="tabButton1">
+         <property name="minimumSize">
+          <size>
+           <width>45</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>45</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="TabButton" name="tabButton2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>45</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>45</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;所有设置&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border:none;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" alignment="Qt::AlignLeft">
+        <widget class="TabButton" name="tabButton3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>45</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>45</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;所有设置&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border:none;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="TabButton" name="tabButton4">
+         <property name="minimumSize">
+          <size>
+           <width>45</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>45</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>2</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="cursor">
+        <cursorShape>ArrowCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color:rgb(149, 236, 255)</string>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(35, 170, 242);
+QStatusBar::item {border: None;}</string>
+   </property>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1000</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>文件(&amp;F)</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_view">
+    <property name="title">
+     <string>视图(&amp;V)</string>
+    </property>
+   </widget>
+   <addaction name="menu_file"/>
+   <addaction name="menu_view"/>
   </widget>
   <action name="action_open">
    <property name="icon">
@@ -1037,6 +1362,11 @@ font: 700 10pt &quot;Calibri&quot;;
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
+   <class>TabButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">TabButton.h</header>
+  </customwidget>
+  <customwidget>
    <class>VideoWidget</class>
    <extends>QOpenGLWidget</extends>
    <header>videowidget.h</header>
@@ -1051,6 +1381,12 @@ font: 700 10pt &quot;Calibri&quot;;
    <class>MySlider</class>
    <extends>QSlider</extends>
    <header location="global">MySlider.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SwitchButton</class>
+   <extends>QWidget</extends>
+   <header location="global">SwitchButton.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

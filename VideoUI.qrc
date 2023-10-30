@@ -23,4 +23,21 @@
         <file>Resources/eraser.png</file>
         <file>Resources/livestream.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>Resources/color.svg</file>
+        <file>Resources/color_hover.svg</file>
+        <file>Resources/color_select.svg</file>
+        <file>Resources/cut.svg</file>
+        <file>Resources/cut_hover.svg</file>
+        <file>Resources/cut_select.svg</file>
+        <file>Resources/file.svg</file>
+        <file>Resources/file_hover.svg</file>
+        <file>Resources/file_select.svg</file>
+        <file>Resources/math.svg</file>
+        <file>Resources/math_hover.svg</file>
+        <file>Resources/math_select.svg</file>
+        <file>Resources/net.svg</file>
+        <file>Resources/net_hover.svg</file>
+        <file>Resources/net_select.svg</file>
+    </qresource>
 </RCC>
