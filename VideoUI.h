@@ -81,6 +81,16 @@ private slots:
 
     void on_action_stream_triggered();
 
+
+
+    void on_double_video_triggered(bool checked);
+
+    void on_action_open_2_triggered();
+
+    void on_action_export_2_triggered();
+
+    void on_action_time_clip_triggered(bool checked);
+
 public slots:
     void do_des_clip(double xRatio,double yRatio,double widthRatio,double heightRatio);
 private:
@@ -106,6 +116,8 @@ private:
     QLabel* playInfo=new QLabel("正在播放",this);
     QLabel* pauseInfo=new QLabel("暂停",this);
     QLabel* exportInfo=new QLabel("正在导出",this);
+public:
+    void changeStatus(QStatusBar* statusBar,QLabel* status=nullptr);
     //QHBoxLayout* statusLayout=new QHBoxLayout();
     //QWidget* statusWidget=new QWidget();
 

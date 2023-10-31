@@ -301,6 +301,22 @@ TabButton* VideoUI::findTabButton(int index, QGridLayout *layout){
     return nullptr;
 }
 
+void VideoUI::changeStatus(QStatusBar *statusBar, QLabel *status){
+    //应当限制status是statusBar的标签。
+    QList<QLabel*> labels=statusBar->findChildren<QLabel*>();
+    for(auto label:labels){
+        label->setVisible(false);
+    }
+
+    if(status!=nullptr){
+
+        status->setVisible(true);
+    }
+    else{
+        //空
+    }
+}
+
 void VideoUI::timerEvent(QTimerEvent* e) {
     if (pressSlider) return;
     double pos = VideoThread::Get()->GetPos();
@@ -546,7 +562,8 @@ void VideoUI::Export() {
     std::string filename = name.toLocal8Bit().data();
     int w = ui.width->value();
     int h = ui.height->value();
-
+    //状态栏显示正在导出信息
+    changeStatus(ui.statusBar,exportInfo);
     if (VideoThread::Get()->StartSave(filename,w,h, isColor))
     {
         isExport = true;
@@ -573,6 +590,10 @@ void VideoUI::ExportEnd() {
     QFile::remove(tmp.c_str());
     QFile::rename(des.c_str(), tmp.c_str());
     AudioThread::Get()->Merge(tmp, src+".mp3", des);
+
+    //changeStatus(ui.statusBar);
+    //ui.statusBar->showMessage("导出成功",1000);无法判断是否取消导出，应该更改Export()函数有返回值
+    changeStatus(ui.statusBar,readyInfo);
 
 }
 
@@ -1144,3 +1165,37 @@ void VideoUI::setLayoutVisible(QLayout *layout, bool enable){
        }
     }
 }
+
+
+
+
+void VideoUI::on_double_video_triggered(bool checked)
+{
+    //ui.src1->setVisible(checked);
+    //ui.drawRect->setVisible(checked);
+}
+
+
+void VideoUI::on_action_open_2_triggered()
+{
+    this->Open();
+    if(cap1.isOpened()){
+       changeStatus(ui.statusBar,playInfo);
+    }
+}
+
+
+void VideoUI::on_action_export_2_triggered()
+{
+    this->Export();
+    this->ExportEnd();
+
+}
+
+
+void VideoUI::on_action_time_clip_triggered(bool checked)
+{
+    setLayoutVisible(ui.horizontalLayout_start_clip,checked);
+    setLayoutVisible(ui.horizontalLayout_end_clip,checked);
+}
+
