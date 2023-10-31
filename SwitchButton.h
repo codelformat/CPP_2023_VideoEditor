@@ -62,7 +62,7 @@ private:
     int mAnimationPeriod{200};  //动画周期
     QPointF mRightPos;       // 动画位置-开
     QPointF mLeftPos;        // 动画位置-关
-    QColor mBackOnColor{Qt::green};  //背景颜色-开
+    QColor mBackOnColor{165,222,228};  //背景颜色-开
     QColor mBackOffColor{Qt::darkGray};  //背景颜色-关
 };
 

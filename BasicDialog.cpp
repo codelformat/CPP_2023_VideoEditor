@@ -14,15 +14,15 @@ BasicDialog::BasicDialog(QSpinBox* receiver1,QSpinBox* receiver2,QWidget* parent
     form->addRow(label1,this->spinBoxWidth);
     form->addRow(label2,this->spinBoxHeight);
     layout->addLayout(form);
-    this->spinBoxWidth->setMaximum(500);
+    this->spinBoxWidth->setMaximum(5000);
     this->spinBoxWidth->setMinimum(0);
-    this->spinBoxHeight->setMaximum(500);
+    this->spinBoxHeight->setMaximum(5000);
     this->spinBoxHeight->setMinimum(0);
-    this->btn_size_ok= new QPushButton("OK",this);
+    this->btn_size_ok= new QPushButton("确认",this);
     this->spinBoxWidth->setValue(receiver1->value());
     this->spinBoxHeight->setValue(receiver2->value());
 
-    this->btn_size_cancel= new QPushButton("Cancel", this);
+    this->btn_size_cancel= new QPushButton("取消", this);
     buttons=new QHBoxLayout();
     buttons->addWidget(this->btn_size_ok);
     buttons->addWidget(this->btn_size_cancel);

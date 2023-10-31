@@ -1,7 +1,7 @@
 #include "DrawingWidget.h"
 
 void DrawingWidget::mousePressEvent(QMouseEvent *event){
-    isDrawing=true;//由按钮触发变为true
+    //isDrawing=true;//由按钮触发变为true
     if (isDrawing)
     {
         startPos = event->pos();
@@ -57,4 +57,11 @@ void DrawingWidget::paintEvent(QPaintEvent *event){
         painter.setBrush(QColor(250,250,250,100));
         painter.drawRect(clipRect);
     }
+}
+void DrawingWidget::setIsDrawing(bool isDrawing){
+    this->isDrawing=isDrawing;
+}
+
+bool  DrawingWidget::getIsDrawing()const{
+    return isDrawing;
 }

@@ -27,6 +27,10 @@ private:
     bool isDrawing=false;
     QPoint startPos;
     QPoint endPos;
+public slots:
+    void setIsDrawing(bool isDrawing);
+public:
+    bool getIsDrawing()const;
 signals:
     void clipSignal(double xRatio,double yRatio,double widthRatio,double heightRatio);
 };

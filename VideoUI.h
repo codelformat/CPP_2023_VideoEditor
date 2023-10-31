@@ -91,6 +91,32 @@ private slots:
 
     void on_action_time_clip_triggered(bool checked);
 
+    void on_openFileBtn_clicked();
+
+    void on_exportFileBtn_clicked();
+
+    void on_resetSizeBtn_clicked();
+
+    void on_confirmPxBtn_clicked();
+
+    void on_resetPxBtn_clicked();
+
+    void on_rotate_currentIndexChanged(int index);
+
+    void on_markBtn_clicked();
+
+
+
+    void on_plugFlowBtn_clicked();
+
+
+
+    //void on_horizontalSlider_bright_valueChanged(int value);
+
+    void on_horizontalSlider_bright_sliderReleased();
+
+    void on_horizontalSlider_contrast_sliderReleased();
+
 public slots:
     void do_des_clip(double xRatio,double yRatio,double widthRatio,double heightRatio);
 private:
@@ -123,4 +149,9 @@ public:
 
 public slots:
     void choosePage(int index);
+    void do_des_flip(bool checked);
+    void do_rgb_allow(bool checked);
+    void do_sketch_allow(bool checked);
+    void do_dewater_mark_allow(bool checked);
+    void do_mosaic_allow(bool checked);
 };

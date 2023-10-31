@@ -80,36 +80,21 @@ VideoUI::VideoUI(QWidget *parent)
 
     ui.pauseButton->hide();
     ui.playButton->setCheckable(true);
-    //组件的位置可能要调整下
-//    ui.color->hide();
-//    ui.ma->hide();
-//    ui.mx->hide();
-//    ui.my->hide();
-//    ui.width->hide();
-//    ui.pydown->hide();
-//    ui.flip->hide();
-//    ui.rotate->hide();
-//    ui.height->hide();
-//    ui.mosaic->hide();
-
-
 
     //hideLayout(ui.horizontalLayout_9);
     //ui.playButton->setVisible(true);
+
+    //隐藏所有其它控件，仅保留播放按钮
     setLayoutVisible(ui.horizontalLayout_9,false);
     ui.playButton->setVisible(true);
-    ui.playButton->setCheckable(true);
+    //ui.playButton->setCheckable(true);
+    ui.toolBar->setVisible(false);//隐藏toolBar;
 
-
-    ui.stackedLayout->QStackedLayout::setStackingMode(QStackedLayout::StackAll);
     connect(ui.drawRect,SIGNAL(clipSignal(double,double,double,double)),this,SLOT(do_des_clip(double,double,double,double)));
-
-
 
 
     ui.menu_view->addAction(ui.sideDock->toggleViewAction());
 
-    ui.toolBar->setVisible(false);//暂时隐藏toolBar;
 
     ui.sideDock->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
     ui.sideDock->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetFloatable);
@@ -128,10 +113,13 @@ VideoUI::VideoUI(QWidget *parent)
     connect(ui.tabButton3,&TabButton::signal_click,this,&VideoUI::choosePage);
     connect(ui.tabButton4,&TabButton::signal_click,this,&VideoUI::choosePage);
 
+    //初始化当前侧边栏页面
     choosePage(-1);
-    this->setMinimumHeight(500);
+
+    //初始化窗口大小
+    this->setMinimumHeight(400);
     this->setMinimumWidth(600);
-    this->resize(800,550);
+    this->resize(800,500);
 
 
     ui.statusBar->addWidget(readyInfo);
@@ -149,7 +137,36 @@ VideoUI::VideoUI(QWidget *parent)
     //ui.statusBar->setStyleSheet("QStatusBar::item {border: None;}"
     //                            "background-color: rgb(35, 170, 242);");
 
+    ui.stackedLayout->QStackedLayout::setStackingMode(QStackedLayout::StackAll);
+    ui.drawRect->raise();
 
+    //初始化是否允许裁剪大小
+    connect(ui.clip_allow,&SwitchButton::sigSwitchChanged,ui.drawRect,&DrawingWidget::setIsDrawing);
+    ui.clip_allow->setSwitch(true);
+
+
+
+    //分辨率只允许输入0~9999整型
+    ui.lineEdit_Hpx->setValidator(new QIntValidator(0,9999));
+    ui.lineEdit_Vpx->setValidator(new QIntValidator(0,9999));
+
+    //初始化为RGB模式
+    ui.rgb_allow->setSwitch(true);
+    //rgb模式转换
+    connect(ui.rgb_allow,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_rgb_allow);
+
+    //视频翻转
+    connect(ui.xflip,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_des_flip);
+    connect(ui.yflip,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_des_flip);
+
+
+    //素描，存在功能冲突问题
+    connect(ui.sketch_allow,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_sketch_allow);
+
+    //去水印，存在功能冲突
+    connect(ui.dewater_mark_allow,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_dewater_mark_allow);
+    //人脸打码，。。。
+    connect(ui.mosaic_allow,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_mosaic_allow);
 
     startTimer(40); // 可根据fps设置定时器的时间
 }
@@ -241,7 +258,7 @@ void VideoUI::choosePage(int index){
         //参数为-1，取消选中，并隐藏功能区
         if(index==-1){
 
-            ui.stackedWidget->setVisible(!ui.stackedWidget->isVisible());
+            ui.stackedWidget->setVisible(false);
             ui.line_2->setVisible(false);
             this->resizeDocks({ui.sideDock},{TabButton::fixSize+2},Qt::Horizontal);
             //设置成不可再改变宽度
@@ -365,6 +382,7 @@ void VideoUI::Pause() {
     ui.playButton->show();
     VideoThread::Get()->Pause();
     ui.pauseButton->hide();
+    changeStatus(ui.statusBar,pauseInfo);
 }
 void VideoUI::PlayOrPause(bool status){
     if(VideoThread::Get()->isThreadOpen())
@@ -1171,8 +1189,15 @@ void VideoUI::setLayoutVisible(QLayout *layout, bool enable){
 
 void VideoUI::on_double_video_triggered(bool checked)
 {
-    //ui.src1->setVisible(checked);
-    //ui.drawRect->setVisible(checked);
+    setLayoutVisible(ui.stackedLayout,checked);
+    if(checked){
+       ui.horizontalLayout_video->setStretch(0,1);
+    }
+    else{
+       ui.horizontalLayout_video->setStretch(0,0);
+
+    }
+    //接口代码有bug，暂无法实现
 }
 
 
@@ -1181,6 +1206,12 @@ void VideoUI::on_action_open_2_triggered()
     this->Open();
     if(cap1.isOpened()){
        changeStatus(ui.statusBar,playInfo);
+       int width = cap1.get(CAP_PROP_FRAME_WIDTH);
+       int height = cap1.get(CAP_PROP_FRAME_HEIGHT);
+       //初始化分辨率、文件内容
+       ui.lineEdit_Hpx->setText(QString::number(width));
+       ui.lineEdit_Vpx->setText(QString::number(height));
+       ui.curFileName->setPlainText(QString::fromStdString(fileUrl));
     }
 }
 
@@ -1188,7 +1219,7 @@ void VideoUI::on_action_open_2_triggered()
 void VideoUI::on_action_export_2_triggered()
 {
     this->Export();
-    this->ExportEnd();
+    //this->ExportEnd();
 
 }
 
@@ -1197,5 +1228,212 @@ void VideoUI::on_action_time_clip_triggered(bool checked)
 {
     setLayoutVisible(ui.horizontalLayout_start_clip,checked);
     setLayoutVisible(ui.horizontalLayout_end_clip,checked);
+}
+
+
+void VideoUI::on_openFileBtn_clicked()
+{
+    //this->Open();
+    on_action_open_2_triggered();
+}
+
+
+void VideoUI::on_exportFileBtn_clicked()
+{
+    //this->Export();
+    on_action_export_2_triggered();
+}
+
+
+void VideoUI::on_resetSizeBtn_clicked()
+{
+    //VideoFilter::Get()->Clear();
+    int width = cap1.get(CAP_PROP_FRAME_WIDTH);
+    int height = cap1.get(CAP_PROP_FRAME_HEIGHT);
+    int cx=0;
+    int cy=0;
+    int cw=width;
+    int ch=height;
+
+    ui.cx->setValue(cx);
+    ui.cy->setValue(cy);
+    ui.cw->setValue(cw);
+    ui.ch->setValue(ch);
+
+    this->Set();
+}
+
+
+void VideoUI::on_confirmPxBtn_clicked()
+{
+    ui.width->setValue(ui.lineEdit_Hpx->text().toInt());
+    ui.height->setValue(ui.lineEdit_Vpx->text().toInt());
+    this->Set();
+}
+
+
+void VideoUI::on_resetPxBtn_clicked()
+{
+    int width = cap1.get(CAP_PROP_FRAME_WIDTH);
+    int height = cap1.get(CAP_PROP_FRAME_HEIGHT);
+    ui.lineEdit_Hpx->setText(QString::number(width));
+    ui.lineEdit_Vpx->setText(QString::number(height));
+    ui.width->setValue(width);
+    ui.height->setValue(height);
+    this->Set();
+}
+
+
+void VideoUI::on_rotate_currentIndexChanged(int index)
+{
+    Q_UNUSED(index);
+
+    this->Set();
+}
+
+void VideoUI::do_des_flip(bool checked){
+    Q_UNUSED(checked)
+
+    if(ui.xflip->getSwitch()&&ui.yflip->getSwitch()){
+       ui.flip->setCurrentIndex(3);
+    }
+    else if(ui.xflip->getSwitch()){
+       ui.flip->setCurrentIndex(1);
+    }
+    else if(ui.xflip->getSwitch()){
+       ui.flip->setCurrentIndex(2);
+
+    }
+    else{
+       ui.flip->setCurrentIndex(0);
+    }
+    this->Set();
+}
+
+
+//尚未完成此段代码
+void VideoUI::on_markBtn_clicked()
+{
+    if(!cap1.isOpened()){
+       return;
+    }
+
+    isMark = false;
+    QString name = QFileDialog::getOpenFileName(this, "选择图片");
+    if (name.isEmpty()) {
+        return;
+    }
+    std::string file = name.toLocal8Bit().data();
+    cv::Mat mark = cv::imread(file);
+    if (mark.empty()) return;
+
+
+
+    dialog_size=new MyDialog();
+    dialog_size->setWindowTitle("请设置水印参数");
+    dialog_size->setFixedHeight(200);
+    dialog_size->setFixedWidth(300);
+// 创建布局
+    QVBoxLayout layout(dialog_size);
+    dialog_size->spinBoxWidth = new QSpinBox(dialog_size);
+    dialog_size->spinBoxHeight = new QSpinBox(dialog_size);
+    dialog_size->spinBoxVertical = new QDoubleSpinBox(dialog_size);
+    QFormLayout form=QFormLayout();
+    form.addRow("坐标X",dialog_size->spinBoxWidth);
+    form.addRow("坐标Y",dialog_size->spinBoxHeight);
+    form.addRow("不透明度",dialog_size->spinBoxVertical);
+    layout.addLayout(&form);
+    dialog_size->spinBoxWidth->setMaximum(6000);
+    dialog_size->spinBoxWidth->setMinimum(0);
+    dialog_size->spinBoxHeight->setMaximum(6000);
+    dialog_size->spinBoxHeight->setMinimum(0);
+    dialog_size->spinBoxVertical->setMaximum(1.0);
+    dialog_size->spinBoxVertical->setMinimum(0);
+    dialog_size->spinBoxVertical->setSingleStep(0.01);
+    dialog_size->btn_size_ok= new QPushButton("确认",dialog_size);
+    dialog_size->spinBoxWidth->setValue(ui.mx->value());
+    dialog_size->spinBoxHeight->setValue(ui.my->value());
+    dialog_size->spinBoxVertical->setValue(ui.ma->value());
+
+    dialog_size->btn_size_cancel= new QPushButton("取消", dialog_size);
+    QHBoxLayout buttons;
+    buttons.addWidget(dialog_size->btn_size_ok);
+    buttons.addWidget(dialog_size->btn_size_cancel);
+    layout.addLayout(&buttons);
+    QObject::connect(dialog_size->btn_size_ok,SIGNAL(clicked()),this,SLOT(do_watermark_ok_clicked()));
+    QObject::connect(dialog_size->btn_size_ok,SIGNAL(clicked(bool)),dialog_size,SLOT(accept()));
+    QObject::connect(dialog_size->btn_size_cancel,SIGNAL(clicked(bool)),dialog_size,SLOT(close()));
+    dialog_size->exec();
+    VideoThread::Get()->SetMark(mark);
+    isMark = true;
+    this->Set();
+}
+
+void VideoUI::do_rgb_allow(bool checked){
+    if(checked){
+        ui.color->setCurrentIndex(0);
+    }
+    else{
+        ui.color->setCurrentIndex(1);
+    }
+    this->Set();
+}
+
+//存在功能冲突，如果使用一个mosaic的话。
+void VideoUI::do_sketch_allow(bool checked)
+{
+    if(checked){
+        ui.mosaic->setCurrentIndex(2);
+    }
+    else{
+        ui.mosaic->setCurrentIndex(0);
+    }
+    this->Set();
+}
+
+//存在功能冲突
+void VideoUI::on_plugFlowBtn_clicked()
+{
+
+    if (!ui.plugFlowEdit->toPlainText().isEmpty()){
+        outUrl=ui.plugFlowEdit->toPlainText().toStdString();
+        qDebug("%s",outUrl);
+        ui.mosaic->setCurrentIndex(3);
+        this->Set();
+    }
+}
+
+
+void VideoUI::do_dewater_mark_allow(bool checked){
+    if(checked){
+        ui.mosaic->setCurrentIndex(4);
+    }
+    else{
+        ui.mosaic->setCurrentIndex(0);
+    }
+    this->Set();
+}
+void VideoUI::do_mosaic_allow(bool checked){
+    if(checked){
+        ui.mosaic->setCurrentIndex(1);
+    }
+    else{
+        ui.mosaic->setCurrentIndex(0);
+    }
+    this->Set();
+}
+
+
+
+
+void VideoUI::on_horizontalSlider_bright_sliderReleased()
+{
+    this->Set();
+}
+
+
+void VideoUI::on_horizontalSlider_contrast_sliderReleased()
+{
+    this->Set();
 }
 
