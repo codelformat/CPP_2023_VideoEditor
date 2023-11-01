@@ -12,7 +12,7 @@ void VideoWidget::paintEvent(QPaintEvent* e) {
 }
 
 VideoWidget::VideoWidget(QWidget* p) : QOpenGLWidget(p) {
-	/*setWindowFlags(Qt::FramelessWindowHint);*/
+    /*setWindowFlags(Qt::FramelessWindowHint);*/
 }
 
 // ÐÅºÅ²Ûº¯Êý

@@ -84,6 +84,9 @@ VideoUI::VideoUI(QWidget *parent)
     //hideLayout(ui.horizontalLayout_9);
     //ui.playButton->setVisible(true);
 
+
+
+
     //隐藏所有其它控件，仅保留播放按钮
     setLayoutVisible(ui.horizontalLayout_9,false);
     ui.playButton->setVisible(true);
@@ -116,11 +119,34 @@ VideoUI::VideoUI(QWidget *parent)
     //初始化当前侧边栏页面
     choosePage(-1);
 
+
+    //测试代码：
+    choosePage(0);
+    //BUG记录！
+    //若初始设置侧边栏隐藏，在未打开过视频时点击显示侧边栏，视频播放会出现黑边
+    //如果只是小范围拖动窗口大小，不会出现此bug，但是大幅度拖动窗口则又会出现黑边。
+    //拖大窗口会出现显示不全的问题。
+
+
     //初始化窗口大小
     this->setMinimumHeight(400);
     this->setMinimumWidth(600);
-    this->resize(800,500);
+    this->resize(1000,500);
 
+    //statusFont->
+    //exportInfo->setFont();
+    readyInfo->setStyleSheet("color: rgb(255, 255, 255);"
+                             "font: 10.5pt SimHei;"
+                             );
+    playInfo->setStyleSheet("color: rgb(255, 255, 255);"
+                            "font: 10.5pt SimHei;"
+                            );
+    pauseInfo->setStyleSheet("color: rgb(255, 255, 255);"
+                             "font: 10.5pt SimHei;"
+                             );
+    exportInfo->setStyleSheet("color: rgb(255, 255, 255);"
+                              "font: 10.5pt SimHei;"
+                              );
 
     ui.statusBar->addWidget(readyInfo);
     ui.statusBar->addWidget(playInfo);
@@ -375,6 +401,16 @@ void VideoUI::Play() {
         this->Left(0);
         VideoThread::Get()->Play();
         ui.playButton->hide();
+
+
+
+        changeStatus(ui.statusBar,playInfo);
+
+        ui.curFileName->setPlainText(QString::fromLocal8Bit(fileUrl));//防止乱码
+
+    }
+    else{
+        changeStatus(ui.statusBar,readyInfo);
     }
 }
 
@@ -575,7 +611,7 @@ void VideoUI::Export() {
         return;
     }
     // 开始导出
-    QString name = QFileDialog::getSaveFileName(this, "Save", "out.avi"); // 先不考虑格式
+    QString name = QFileDialog::getSaveFileName(this, "导出为", "out.avi"); // 先不考虑格式
     if (name.isEmpty()) return;
     std::string filename = name.toLocal8Bit().data();
     int w = ui.width->value();
@@ -1211,7 +1247,7 @@ void VideoUI::on_action_open_2_triggered()
        //初始化分辨率、文件内容
        ui.lineEdit_Hpx->setText(QString::number(width));
        ui.lineEdit_Vpx->setText(QString::number(height));
-       ui.curFileName->setPlainText(QString::fromStdString(fileUrl));
+       ui.curFileName->setPlainText(QString::fromLocal8Bit(fileUrl));//防止乱码
     }
 }
 
@@ -1261,6 +1297,8 @@ void VideoUI::on_resetSizeBtn_clicked()
     ui.ch->setValue(ch);
 
     this->Set();
+
+    isClip=false;
 }
 
 
@@ -1297,7 +1335,7 @@ void VideoUI::do_des_flip(bool checked){
     if(ui.xflip->getSwitch()&&ui.yflip->getSwitch()){
        ui.flip->setCurrentIndex(3);
     }
-    else if(ui.xflip->getSwitch()){
+    else if(ui.yflip->getSwitch()){
        ui.flip->setCurrentIndex(1);
     }
     else if(ui.xflip->getSwitch()){
@@ -1311,7 +1349,6 @@ void VideoUI::do_des_flip(bool checked){
 }
 
 
-//尚未完成此段代码
 void VideoUI::on_markBtn_clicked()
 {
     if(!cap1.isOpened()){
@@ -1329,44 +1366,65 @@ void VideoUI::on_markBtn_clicked()
 
 
 
-    dialog_size=new MyDialog();
-    dialog_size->setWindowTitle("请设置水印参数");
-    dialog_size->setFixedHeight(200);
-    dialog_size->setFixedWidth(300);
-// 创建布局
-    QVBoxLayout layout(dialog_size);
-    dialog_size->spinBoxWidth = new QSpinBox(dialog_size);
-    dialog_size->spinBoxHeight = new QSpinBox(dialog_size);
-    dialog_size->spinBoxVertical = new QDoubleSpinBox(dialog_size);
-    QFormLayout form=QFormLayout();
-    form.addRow("坐标X",dialog_size->spinBoxWidth);
-    form.addRow("坐标Y",dialog_size->spinBoxHeight);
-    form.addRow("不透明度",dialog_size->spinBoxVertical);
-    layout.addLayout(&form);
-    dialog_size->spinBoxWidth->setMaximum(6000);
-    dialog_size->spinBoxWidth->setMinimum(0);
-    dialog_size->spinBoxHeight->setMaximum(6000);
-    dialog_size->spinBoxHeight->setMinimum(0);
-    dialog_size->spinBoxVertical->setMaximum(1.0);
-    dialog_size->spinBoxVertical->setMinimum(0);
-    dialog_size->spinBoxVertical->setSingleStep(0.01);
-    dialog_size->btn_size_ok= new QPushButton("确认",dialog_size);
-    dialog_size->spinBoxWidth->setValue(ui.mx->value());
-    dialog_size->spinBoxHeight->setValue(ui.my->value());
-    dialog_size->spinBoxVertical->setValue(ui.ma->value());
+    QDialog* markDialog=new QDialog();
+    //markDialog->setAttribute(Qt::WA_DeleteOnClose);
 
-    dialog_size->btn_size_cancel= new QPushButton("取消", dialog_size);
-    QHBoxLayout buttons;
-    buttons.addWidget(dialog_size->btn_size_ok);
-    buttons.addWidget(dialog_size->btn_size_cancel);
-    layout.addLayout(&buttons);
-    QObject::connect(dialog_size->btn_size_ok,SIGNAL(clicked()),this,SLOT(do_watermark_ok_clicked()));
-    QObject::connect(dialog_size->btn_size_ok,SIGNAL(clicked(bool)),dialog_size,SLOT(accept()));
-    QObject::connect(dialog_size->btn_size_cancel,SIGNAL(clicked(bool)),dialog_size,SLOT(close()));
-    dialog_size->exec();
-    VideoThread::Get()->SetMark(mark);
-    isMark = true;
-    this->Set();
+    markDialog->setWindowTitle("请设置水印参数");
+    markDialog->setFixedHeight(200);
+    markDialog->setFixedWidth(300);
+
+    QVBoxLayout* layout=new QVBoxLayout(markDialog);
+    QSpinBox* spinBoxX;
+    QSpinBox* spinBoxY;
+    QDoubleSpinBox* spinBoxOpacity;
+    spinBoxX = new QSpinBox(markDialog);
+    spinBoxY = new QSpinBox(markDialog);
+    spinBoxOpacity = new QDoubleSpinBox(markDialog);
+    spinBoxOpacity->setMaximum(1.0);
+    spinBoxOpacity->setMinimum(0);
+    spinBoxOpacity->setSingleStep(0.1);
+    spinBoxOpacity->setValue(1.0);
+
+    spinBoxX->setMaximum(6000);
+    spinBoxX->setMinimum(0);
+    spinBoxY->setMaximum(6000);
+    spinBoxY->setMinimum(0);
+
+    spinBoxX->setValue(ui.mx->value());
+    spinBoxY->setValue(ui.my->value());
+    //spinBoxOpacity->setValue(ui.ma->value());
+
+    QFormLayout* form=new QFormLayout();
+    form->addRow("坐标X",spinBoxX);
+    form->addRow("坐标Y",spinBoxY);
+    form->addRow("不透明度",spinBoxOpacity);
+    layout->addLayout(form);
+
+    QPushButton* confirmBtn=new QPushButton("确认",markDialog);
+    QPushButton* cancelBtn=new QPushButton("取消", markDialog);
+
+    QHBoxLayout* buttons=new QHBoxLayout();
+
+    buttons->addWidget(confirmBtn);
+    buttons->addWidget(cancelBtn);
+
+    layout->addLayout(buttons);
+
+
+
+    connect(confirmBtn,SIGNAL(clicked()),markDialog,SLOT(accept()));
+    connect(cancelBtn,SIGNAL(clicked()),markDialog,SLOT(close()));
+
+    if(markDialog->exec()==QDialog::Accepted){
+        ui.mx->setValue(spinBoxX->value());
+        ui.my->setValue(spinBoxY->value());
+        ui.ma->setValue(spinBoxOpacity->value());
+        markDialog->close();
+        VideoThread::Get()->SetMark(mark);
+        isMark = true;
+        this->Set();
+    }
+    delete markDialog;
 }
 
 void VideoUI::do_rgb_allow(bool checked){
@@ -1434,6 +1492,14 @@ void VideoUI::on_horizontalSlider_bright_sliderReleased()
 
 void VideoUI::on_horizontalSlider_contrast_sliderReleased()
 {
+    this->Set();
+}
+
+
+void VideoUI::on_resetPyBtn_clicked()
+{
+    ui.pyup->setValue(0);
+    ui.pydown->setValue(0);
     this->Set();
 }
 

@@ -61,8 +61,9 @@ color:rgb(255, 255,255);
 
 QLabel
 {
-    color:rgb(0,0,0);
-	font: 11pt &quot;SimHei&quot;;
+    
+	color: rgb(31, 35, 40);
+	font: 10.5pt &quot;SimHei&quot;;
 }
 
 #playButton:!hover
@@ -105,14 +106,17 @@ QLabel
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_4">
+    <property name="bottomMargin">
+     <number>2</number>
+    </property>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_video" stretch="1,1">
       <item>
        <layout class="QStackedLayout" name="stackedLayout">
-        <item>
+        <item row="0" column="0">
          <widget class="DrawingWidget" name="drawRect" native="true"/>
         </item>
-        <item>
+        <item row="0" column="0">
          <widget class="VideoWidget" name="src1">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -756,7 +760,7 @@ font: 700 10pt &quot;Calibri&quot;;
   <widget class="QDockWidget" name="sideDock">
    <property name="minimumSize">
     <size>
-     <width>182</width>
+     <width>207</width>
      <height>385</height>
     </size>
    </property>
@@ -967,7 +971,7 @@ font: 700 10pt &quot;Calibri&quot;;
           <string notr="true">background-color: rgb(246, 248, 250);</string>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="page">
           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,0,1,0,0,1,9">
@@ -1273,8 +1277,8 @@ font-family: &quot;SimHei&quot;;
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>174</width>
-                <height>380</height>
+                <width>274</width>
+                <height>532</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_9" stretch="2,0,3,0,2,0,2,6">
@@ -1438,7 +1442,7 @@ font-family: &quot;SimHei&quot;;
                  <item>
                   <layout class="QVBoxLayout" name="verticalLayout_7">
                    <property name="spacing">
-                    <number>10</number>
+                    <number>12</number>
                    </property>
                    <item alignment="Qt::AlignLeft">
                     <widget class="QLabel" name="label_8">
@@ -1858,8 +1862,8 @@ font-family: &quot;SimHei&quot;;
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>274</width>
-                <height>532</height>
+                <width>129</width>
+                <height>298</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_13">
@@ -1869,7 +1873,7 @@ font-family: &quot;SimHei&quot;;
                <item>
                 <layout class="QVBoxLayout" name="verticalLayout_12">
                  <property name="spacing">
-                  <number>10</number>
+                  <number>12</number>
                  </property>
                  <item alignment="Qt::AlignLeft">
                   <widget class="QLabel" name="label_10">
@@ -2276,12 +2280,6 @@ font-family: &quot;SimHei&quot;;
          </widget>
          <widget class="QWidget" name="page_5">
           <layout class="QVBoxLayout" name="verticalLayout_16">
-           <property name="spacing">
-            <number>10</number>
-           </property>
-           <property name="topMargin">
-            <number>10</number>
-           </property>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_15">
              <property name="spacing">
@@ -2339,22 +2337,6 @@ font-family: &quot;SimHei&quot;;
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_7">
                <item>
-                <spacer name="horizontalSpacer_16">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Expanding</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
                 <widget class="QPushButton" name="pyramidBtn">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -2364,8 +2346,8 @@ font-family: &quot;SimHei&quot;;
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>70</width>
-                   <height>35</height>
+                   <width>64</width>
+                   <height>30</height>
                   </size>
                  </property>
                  <property name="cursor">
@@ -2400,7 +2382,57 @@ font-family: &quot;SimHei&quot;;
 }</string>
                  </property>
                  <property name="text">
-                  <string>设置</string>
+                  <string>确定</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="resetPyBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">:!hover
+
+{
+ 
+/*background-color: rgb(0, 255, 255);*/
+background-color: rgb(31, 136, 61);
+	/*background-color: rgb(27, 129, 62);*/
+border: none;
+border-radius: 3px;
+color: rgb(255, 255,255);
+font:150 11pt;
+font-family: &quot;SimHei&quot;;
+}
+:hover
+{
+	
+	
+	
+/*background-color: rgb(0, 235, 235);*/
+	background-color: rgb(26, 127, 55);
+border: none;
+border-radius: 3px;
+color: rgb(255, 255,255);
+font:150 11pt ;
+font-family: &quot;SimHei&quot;;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>重置</string>
                  </property>
                 </widget>
                </item>
@@ -2489,6 +2521,33 @@ font-family: &quot;SimHei&quot;;
             </layout>
            </item>
            <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_39">
+             <item>
+              <widget class="QLabel" name="label_25">
+               <property name="text">
+                <string>物体检测</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="SwitchButton" name="object_detect_allow" native="true">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>45</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
             <spacer name="verticalSpacer_6">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -2525,7 +2584,8 @@ font-family: &quot;SimHei&quot;;
         <cursorShape>ArrowCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">color:rgb(149, 236, 255)</string>
+        <string notr="true">
+color: rgb(208, 215, 222);</string>
        </property>
        <property name="frameShadow">
         <enum>QFrame::Plain</enum>

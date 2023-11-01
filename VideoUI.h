@@ -117,6 +117,8 @@ private slots:
 
     void on_horizontalSlider_contrast_sliderReleased();
 
+    void on_resetPyBtn_clicked();
+
 public slots:
     void do_des_clip(double xRatio,double yRatio,double widthRatio,double heightRatio);
 private:
@@ -138,10 +140,11 @@ public:
 public:
     static const int dockWidth;
 private:
-    QLabel* readyInfo=new QLabel("就绪",this);
-    QLabel* playInfo=new QLabel("正在播放",this);
-    QLabel* pauseInfo=new QLabel("暂停",this);
-    QLabel* exportInfo=new QLabel("正在导出",this);
+    //QFont* statusFont=new QFont("SimHei",10);
+    QLabel* readyInfo=new QLabel(" 就绪 ",this);
+    QLabel* playInfo=new QLabel(" 正在播放 ",this);
+    QLabel* pauseInfo=new QLabel(" 暂停 ",this);
+    QLabel* exportInfo=new QLabel(" 正在导出 ",this);
 public:
     void changeStatus(QStatusBar* statusBar,QLabel* status=nullptr);
     //QHBoxLayout* statusLayout=new QHBoxLayout();
