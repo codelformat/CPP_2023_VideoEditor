@@ -131,7 +131,7 @@ VideoUI::VideoUI(QWidget *parent)
     //初始化窗口大小
     this->setMinimumHeight(400);
     this->setMinimumWidth(600);
-    this->resize(1000,500);
+    this->resize(1200,600);
 
     //statusFont->
     //exportInfo->setFont();
