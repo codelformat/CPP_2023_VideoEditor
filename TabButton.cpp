@@ -1,5 +1,5 @@
-#include<TabButton.h>
-#include<QEvent>
+#include"TabButton.h"
+#include<QtCore/QEvent>
 int TabButton::count=0;
 int TabButton::curIndex=-1;
 bool TabButton::isStackFold=false;

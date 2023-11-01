@@ -54,13 +54,16 @@ public:
 	// 去水印
 	void removeWatermark();
 
+	//物体检测
+	void objectDectection();
+
 	ImageProcess();
 	~ImageProcess();
 private:
 	cv::Mat src1, src2;
 	std::string path_ = "D:\\Cpp_2023_project\\bin\\haarcascade_frontalface_default.xml";
-	
-
+	std::string onnx_path = "yolov5n.onnx";
+	cv::dnn::Net net;
 	// 目标图
 	cv::Mat des;
 };

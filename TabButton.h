@@ -1,8 +1,8 @@
 #ifndef TABBUTTON_H
 #define TABBUTTON_H
-#include<QPushButton>
-#include<QIcon>
-#include<QEvent>
+#include<QtWidgets/QPushButton>
+#include<QtGui/QIcon>
+#include<QtCore/QEvent>
 class TabButton:public QPushButton{
     Q_OBJECT
 

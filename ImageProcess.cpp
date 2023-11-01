@@ -3,10 +3,31 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include<unordered_map>
+#include <vector>
 #include <omp.h>
 
 using namespace cv;
 static CascadeClassifier object;
+std::vector<cv::Scalar> colors = {
+	cv::Scalar(0, 0, 255),    // Red
+	cv::Scalar(0, 255, 0),    // Green
+	cv::Scalar(255, 0, 0),    // Blue
+	cv::Scalar(255, 255, 0),  // Yellow
+	cv::Scalar(255, 0, 255)   // Magenta
+};
+
+std::vector<std::string> classNames = {
+	"person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat",
+	"traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat",
+	"dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack",
+	"umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard", "sports ball",
+	"kite", "baseball bat", "baseball glove", "skateboard", "surfboard", "tennis racket",
+	"bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple",
+	"sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair",
+	"sofa", "pottedplant", "bed", "diningtable", "toilet", "tvmonitor", "laptop", "mouse",
+	"remote", "keyboard", "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator",
+	"book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush", "Footer"
+};
 
 void ImageProcess::Set(cv::Mat mat1, cv::Mat mat2) {
 	if (mat1.empty()) return;
@@ -90,80 +111,17 @@ void ImageProcess::Gray() {
 
 // 水印
 void ImageProcess::Mark(int x, int y, double a) {
-	if (des.empty()) return;
+	if(des.empty()) return;
 	if (src2.empty()) return;
 	if (x < 0 || y < 0) return;
-	if (src2.channels() < 4) {
-		// 如果图像没有alpha通道，为它创建一个（全部非透明）
-		std::cout << "Get alpha!" << std::endl;
-		uchar alpha_value = static_cast<uchar>(a * 255);
-		cv::Mat alpha(src2.size(), CV_8UC1, cv::Scalar(alpha_value));
-		cv::Mat temp;
-		cv::merge(std::vector<cv::Mat>{src2, alpha}, temp);
-		src2 = temp;
-	}
 
-	// 如果水印图像大于目标视频帧，则缩放水印图像
-	if (src2.rows > des.rows || src2.cols > des.cols) {
-		double scale = std::min(static_cast<double>(des.rows) / src2.rows, static_cast<double>(des.cols) / src2.cols);
-		cv::resize(src2, src2, cv::Size(), scale, scale);
-	}
 	/*
 	// 还未考虑图片大小大于视频分辨率的情况
 	*/
-	cv::Mat roi = des(cv::Rect(x, y, src2.cols, src2.rows));
-	/*addWeighted(src2, a, roi, 1 - a, 0, roi);*/
-	for (int i = 0; i < src2.rows; ++i) {
-		for (int j = 0; j < src2.cols; ++j) {
-			cv::Vec4b& pixel = src2.at<cv::Vec4b>(i, j);
-			float alpha = pixel[3] / 255.0;
-			cv::Vec3b& roiPixel = roi.at<cv::Vec3b>(i, j);
-			for (int k = 0; k < 3; ++k) {
-				roiPixel[k] = static_cast<uchar>(pixel[k] * alpha + roiPixel[k] * (1 - alpha));
-			}
-		}
-	}
-}
+	Mat roi = des(Rect(x, y, src2.cols, src2.rows));
+	addWeighted(src2, a, roi, 1 - a, 0, roi);
 
-//void ImageProcess::Mosaic() {
-//	//加载文件
-//	
-//	std::vector<Rect> face;
-//	// CascadeClassifier object;
-//	
-//	object.detectMultiScale(des, face, 1.2, 5);
-//	//判断有没有人脸
-//	if (face.empty()) return;
-//	int step = 10;
-//	for (int t = 0; t < face.size(); t++) {
-//		int x = face[t].tl().x;
-//		int y = face[t].tl().y;
-//		int width = face[t].width;
-//		int height = face[t].height;
-//
-//		for (int i = y; i < y + height; i += step) {
-//			for (int j = x; j < x + width; j += step) {
-//				//逐像素处理
-//				for (int k = i; k < step + i; k++) {
-//					for (int m = j; m < step + j; m++) {
-//						for (int c = 0; c < 3; c++) {
-//							//颜色替换
-//							des.at<Vec3b>(k, m)[c] = des.at<Vec3b>(i, j)[2 - c];
-//						}
-//					}
-//				}
-//			}
-//		}
-//		/*for (int i = y; i < y + height; i++) {
-//			for (int j = x; j < x + width; j++) {
-//				des.at<Vec3b>(i, j)[0] = 255;
-//				des.at<Vec3b>(i, j)[1] = 255;
-//				des.at<Vec3b>(i, j)[2] = 255;
-//			}
-//		}*/
-//	}
-//	return;
-//}
+}
 
 void ImageProcess::Mosaic() {
 	std::vector<Rect> face;
@@ -222,9 +180,9 @@ void ImageProcess::removeWatermark() {
 
 	//提取图片下方的水印，制作掩模图像
 	Mat mask = Mat::zeros(des.size(), CV_8U);
-	int height = des.rows* 0.2;
+	int height = des.rows;
 	int width = des.cols;
-	int start = 0.0 * height;
+	int start = 0. * height;
 	//遍历图像像素，提取出水印部分像素，制作掩模图像
 #pragma omp parallel for
 	for (int i = start; i < height; i++)
@@ -247,8 +205,87 @@ void ImageProcess::removeWatermark() {
 	inpaint(des, mask, des, 1, INPAINT_NS);
 }
 
+void ImageProcess::objectDectection() {
+	Mat frame = src1;
+	//int64 start = cv::getTickCount();
+	// 图象预处理 - 格式化操作
+	int w = frame.cols;
+	int h = frame.rows;
+	int _max = std::max(h, w);
+	cv::Mat image = cv::Mat::zeros(cv::Size(_max, _max), CV_8UC3);
+	cv::Rect roi(0, 0, w, h);
+	frame.copyTo(image(roi));
+
+	float x_factor = image.cols / 640.0f;
+	float y_factor = image.rows / 640.0f;
+
+	// 推理
+	cv::Mat blob = cv::dnn::blobFromImage(image, 1 / 255.0, cv::Size(640, 640), cv::Scalar(0, 0, 0), true, false);
+	net.setInput(blob);
+	cv::Mat preds = net.forward();
+	
+	// 后处理, 1x25200x85
+	cv::Mat det_output(preds.size[1], preds.size[2], CV_32F, preds.ptr<float>());
+	float confidence_threshold = 0.5;
+	std::vector<cv::Rect> boxes;
+	std::vector<int> classIds;
+	std::vector<float> confidences;
+#pragma omp parallel for
+	for (int i = 0; i < det_output.rows; i++) {
+		float confidence = det_output.at<float>(i, 4);
+		if (confidence < confidence_threshold) {
+			continue;
+		}
+		cv::Mat classes_scores = det_output.row(i).colRange(5, preds.size[2]);
+		cv::Point classIdPoint;
+		double score;
+		minMaxLoc(classes_scores, 0, &score, 0, &classIdPoint);
+
+		// 置信度 0～1之间
+		if (score > 0.25)
+		{
+			float cx = det_output.at<float>(i, 0);
+			float cy = det_output.at<float>(i, 1);
+			float ow = det_output.at<float>(i, 2);
+			float oh = det_output.at<float>(i, 3);
+			int x = static_cast<int>((cx - 0.5 * ow) * x_factor);
+			int y = static_cast<int>((cy - 0.5 * oh) * y_factor);
+			int width = static_cast<int>(ow * x_factor);
+			int height = static_cast<int>(oh * y_factor);
+			cv::Rect box;
+			box.x = x;
+			box.y = y;
+			box.width = width;
+			box.height = height;
+#pragma omp critical
+			{
+				boxes.push_back(box);
+				classIds.push_back(classIdPoint.x);
+				confidences.push_back(score);
+			}
+		}
+	}
+
+	// NMS
+	std::vector<int> indexes;
+	cv::dnn::NMSBoxes(boxes, confidences, 0.25, 0.50, indexes);
+	for (size_t i = 0; i < indexes.size(); i++) {
+		int index = indexes[i];
+		int idx = classIds[index];
+		cv::rectangle(frame, boxes[index], colors[idx % 5], 2, 8);
+		cv::rectangle(frame, cv::Point(boxes[index].tl().x, boxes[index].tl().y - 20),
+			cv::Point(boxes[index].br().x, boxes[index].tl().y), cv::Scalar(255, 255, 255), -1);
+		cv::putText(frame, classNames[idx], cv::Point(boxes[index].tl().x, boxes[index].tl().y - 10), cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0, 0, 0),2);
+	}
+	des = frame;
+}
+
 ImageProcess::ImageProcess() {
 	object.load(path_);
+	net = cv::dnn::readNetFromONNX(onnx_path);
+
+	net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+	net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 }
 
 ImageProcess::~ImageProcess() {

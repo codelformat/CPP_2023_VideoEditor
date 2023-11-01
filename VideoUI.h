@@ -158,4 +158,5 @@ public slots:
     void do_sketch_allow(bool checked);
     void do_dewater_mark_allow(bool checked);
     void do_mosaic_allow(bool checked);
+    void do_object_detect_allow(bool checked);
 };

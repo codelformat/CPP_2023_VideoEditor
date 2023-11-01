@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access">
+  <Class Name="AudioThread">
+    <Position X="1.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAQBAAAAAAAAAAwA=</HashCode>
+      <FileName>AudioThread.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BasicDialog">
+    <Position X="3.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAABAAIIEAAQAAAAAAAAAABAoICAAAAAA=</HashCode>
+      <FileName>BasicDialog.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawingWidget">
+    <Position X="9.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAABRAAAABAABAQAAAAgAAAAAAAAAI=</HashCode>
+      <FileName>DrawingWidget.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ImageProcess">
+    <Position X="9.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAABYAABIhABoQAGgxAAAAAABIAAAEACCIAEAAgA=</HashCode>
+      <FileName>ImageProcess.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyDialog">
+    <Position X="7.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAQAAAAAAAIEAAAAAAAAAAAAAAAoAAAAAIAA=</HashCode>
+      <FileName>MyDialog.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MySlider">
+    <Position X="11.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAQgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MySlider.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VideoFilter">
+    <Position X="11.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAACAAAAAAABAAAAAAAAAABAACAAAAAAAAABAAAA=</HashCode>
+      <FileName>VideoFilter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VideoThread">
+    <Position X="6.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgA0AgICSAAQKARAyAGCAAgQCAAAAAAAgBAAABAAoAA=</HashCode>
+      <FileName>VideoThread.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VideoTranscoder">
+    <Position X="2.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIBAgAAQgAAAAAFAACACAAAIAAAABAAAgIJAAAIAAAE=</HashCode>
+      <FileName>VideoTranscoder.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VideoUI" Collapsed="true">
+    <Position X="9.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CIKgAyAACACIFAACBAIOBAEEQAAAQiQAqEmAAAAIIAE=</HashCode>
+      <FileName>VideoUI.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VideoWidget">
+    <Position X="11.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAIABAAAAAAAAAAAIAACAAAAAAAAAAA=</HashCode>
+      <FileName>VideoWidget.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Task">
+    <Position X="5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>VideoFilter.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="TaskType" Collapsed="true">
+    <Position X="7" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAQAECAgAYIBAICAAEAAAAAAACEAAAQAAAEAgAA=</HashCode>
+      <FileName>VideoFilter.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>

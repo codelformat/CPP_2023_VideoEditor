@@ -62,6 +62,9 @@ public:
 			case TASK_REMOVE_WATERMARK:
 				p->removeWatermark();
 				break;
+			case TASK_OBJECT_DETECTION:
+				p->objectDectection();
+				break;
 			default:
 				break;
 			}

@@ -195,6 +195,8 @@ VideoUI::VideoUI(QWidget *parent)
     //人脸打码，。。。
     connect(ui.mosaic_allow,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_mosaic_allow);
 
+    connect(ui.object_detect_allow,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_object_detect_allow);
+
     startTimer(40); // 可根据fps设置定时器的时间
 }
 
@@ -605,6 +607,12 @@ void VideoUI::Set()
         VideoFilter::Get()->Add(Task{ TASK_MASK, {x, y, a} });
     }
 
+
+    if (ui.object_detect_allow->getSwitch()) {
+        cout << "Switch objdetec!" << endl;
+        VideoFilter::Get()->Add(Task{ TASK_OBJECT_DETECTION });
+
+    }
 }
 
 void VideoUI::Export() {
@@ -1527,6 +1535,11 @@ void VideoUI::do_mosaic_allow(bool checked){
     else{
         ui.mosaic->setCurrentIndex(0);
     }
+    this->Set();
+}
+
+void VideoUI::do_object_detect_allow(bool checked)
+{
     this->Set();
 }
 

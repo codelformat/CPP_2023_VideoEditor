@@ -1,12 +1,12 @@
 #ifndef SWITCHBUTTON_H
 #define SWITCHBUTTON_H
 
-#include <QWidget>
-#include <QPropertyAnimation>
-#include <QPainterPath>
-#include <QPainter>
-#include <QRadialGradient>
-#include <QMouseEvent>
+#include <QtWidgets/QWidget>
+#include <QtCore/QPropertyAnimation>
+#include <QtGui/QPainterPath>
+#include <QtGui/QPainter>
+#include <QtGui/QRadialGradient>
+#include <QtGui/QMouseEvent>
 
 ///
 /// \brief 基础控件-Switch开关按钮
