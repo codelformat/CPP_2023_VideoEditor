@@ -42,6 +42,7 @@ public slots:
     void Mark();
 
     //cv::Mat qImageToMat(const QImage& image, bool inCloneImageData);
+    void PlayOrPause(bool status);
 
 private slots:
     void do_value_bright(int val);
@@ -81,6 +82,44 @@ private slots:
 
     void on_action_stream_triggered();
 
+
+
+    void on_double_video_triggered(bool checked);
+
+    void on_action_open_2_triggered();
+
+    void on_action_export_2_triggered();
+
+    void on_action_time_clip_triggered(bool checked);
+
+    void on_openFileBtn_clicked();
+
+    void on_exportFileBtn_clicked();
+
+    void on_resetSizeBtn_clicked();
+
+    void on_confirmPxBtn_clicked();
+
+    void on_resetPxBtn_clicked();
+
+    void on_rotate_currentIndexChanged(int index);
+
+    void on_markBtn_clicked();
+
+
+
+    void on_plugFlowBtn_clicked();
+
+
+
+    //void on_horizontalSlider_bright_valueChanged(int value);
+
+    void on_horizontalSlider_bright_sliderReleased();
+
+    void on_horizontalSlider_contrast_sliderReleased();
+
+    void on_resetPyBtn_clicked();
+
 public slots:
     void do_des_clip(double xRatio,double yRatio,double widthRatio,double heightRatio);
 private:
@@ -92,6 +131,31 @@ public:
     void set_end_time();
     //void set_menu_rotation();
     bool openFile();
-
+    void hideLayout(QLayout* layout);
+    void enableLayout(QLayout* layout);
+    void setLayoutVisible(QLayout* layout, bool enable);
     std::string fileUrl;
+
+    void resetAllIcons(QGridLayout* layout);
+    TabButton* findTabButton( int index,QGridLayout* layout);
+public:
+    static const int dockWidth;
+private:
+    //QFont* statusFont=new QFont("SimHei",10);
+    QLabel* readyInfo=new QLabel(" 就绪 ",this);
+    QLabel* playInfo=new QLabel(" 正在播放 ",this);
+    QLabel* pauseInfo=new QLabel(" 暂停 ",this);
+    QLabel* exportInfo=new QLabel(" 正在导出 ",this);
+public:
+    void changeStatus(QStatusBar* statusBar,QLabel* status=nullptr);
+    //QHBoxLayout* statusLayout=new QHBoxLayout();
+    //QWidget* statusWidget=new QWidget();
+
+public slots:
+    void choosePage(int index);
+    void do_des_flip(bool checked);
+    void do_rgb_allow(bool checked);
+    void do_sketch_allow(bool checked);
+    void do_dewater_mark_allow(bool checked);
+    void do_mosaic_allow(bool checked);
 };

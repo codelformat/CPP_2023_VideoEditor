@@ -28,6 +28,9 @@ static bool pressSlider = false;
 static bool isExport = false;
 static bool isColor = true;
 static bool isMark = false;
+
+const int VideoUI::dockWidth=200;
+
 extern  VideoCapture cap1;
 bool isok=false;
 bool isClip=false;
@@ -77,23 +80,285 @@ VideoUI::VideoUI(QWidget *parent)
     QObject::connect(ui.playSlider,SIGNAL(valueChanged(int)),this,SLOT(do_value_cur()));
 
     ui.pauseButton->hide();
-    //组件的位置可能要调整下
-//    ui.color->hide();
-//    ui.ma->hide();
-//    ui.mx->hide();
-//    ui.my->hide();
-//    ui.width->hide();
-//    ui.pydown->hide();
-//    ui.flip->hide();
-//    ui.rotate->hide();
-//    ui.height->hide();
-//    ui.mosaic->hide();
+    ui.playButton->setCheckable(true);
+
+    //hideLayout(ui.horizontalLayout_9);
+    //ui.playButton->setVisible(true);
 
 
-    ui.stackedLayout->QStackedLayout::setStackingMode(QStackedLayout::StackAll);
+
+
+    //隐藏所有其它控件，仅保留播放按钮
+    setLayoutVisible(ui.horizontalLayout_9,false);
+    ui.playButton->setVisible(true);
+    //ui.playButton->setCheckable(true);
+    ui.toolBar->setVisible(false);//隐藏toolBar;
+
     connect(ui.drawRect,SIGNAL(clipSignal(double,double,double,double)),this,SLOT(do_des_clip(double,double,double,double)));
 
+
+    ui.menu_view->addAction(ui.sideDock->toggleViewAction());
+
+
+    ui.sideDock->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
+    ui.sideDock->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetFloatable);
+    ui.sideDock->setWindowTitle("功能");
+    QWidget* titleBar=new QWidget(ui.sideDock);
+    titleBar->setMinimumHeight(0);
+    titleBar->setMaximumHeight(0);
+    ui.sideDock->setTitleBarWidget(titleBar);
+    ui.sideDock->setMinimumWidth(TabButton::fixSize);
+    //ui.sideDock->resize(80,400);
+    this->resizeDocks({ui.sideDock},{dockWidth},Qt::Horizontal);
+
+    connect(ui.tabButton0,&TabButton::signal_click,this,&VideoUI::choosePage);
+    connect(ui.tabButton1,&TabButton::signal_click,this,&VideoUI::choosePage);
+    connect(ui.tabButton2,&TabButton::signal_click,this,&VideoUI::choosePage);
+    connect(ui.tabButton3,&TabButton::signal_click,this,&VideoUI::choosePage);
+    connect(ui.tabButton4,&TabButton::signal_click,this,&VideoUI::choosePage);
+
+    //初始化当前侧边栏页面
+    choosePage(-1);
+
+
+    //测试代码：
+    choosePage(0);
+    //BUG记录！
+    //若初始设置侧边栏隐藏，在未打开过视频时点击显示侧边栏，视频播放会出现黑边
+    //如果只是小范围拖动窗口大小，不会出现此bug，但是大幅度拖动窗口则又会出现黑边。
+    //拖大窗口会出现显示不全的问题。
+
+
+    //初始化窗口大小
+    this->setMinimumHeight(400);
+    this->setMinimumWidth(600);
+    this->resize(1200,600);
+
+    //statusFont->
+    //exportInfo->setFont();
+    readyInfo->setStyleSheet("color: rgb(255, 255, 255);"
+                             "font: 10.5pt SimHei;"
+                             );
+    playInfo->setStyleSheet("color: rgb(255, 255, 255);"
+                            "font: 10.5pt SimHei;"
+                            );
+    pauseInfo->setStyleSheet("color: rgb(255, 255, 255);"
+                             "font: 10.5pt SimHei;"
+                             );
+    exportInfo->setStyleSheet("color: rgb(255, 255, 255);"
+                              "font: 10.5pt SimHei;"
+                              );
+
+    ui.statusBar->addWidget(readyInfo);
+    ui.statusBar->addWidget(playInfo);
+    ui.statusBar->addWidget(pauseInfo);
+    ui.statusBar->addWidget(exportInfo);
+
+    //ui.statusBar->removeWidget(playInfo);
+    //ui.statusBar->removeWidget(pauseInfo);
+    //ui.statusBar->removeWidget(exportInfo);
+    playInfo->setVisible(false);
+    pauseInfo->setVisible(false);
+    exportInfo->setVisible(false);
+    //statusBar()->setStyleSheet("QStatusBar::item {border: None;}");
+    //ui.statusBar->setStyleSheet("QStatusBar::item {border: None;}"
+    //                            "background-color: rgb(35, 170, 242);");
+
+    ui.stackedLayout->QStackedLayout::setStackingMode(QStackedLayout::StackAll);
+    ui.drawRect->raise();
+
+    //初始化是否允许裁剪大小
+    connect(ui.clip_allow,&SwitchButton::sigSwitchChanged,ui.drawRect,&DrawingWidget::setIsDrawing);
+    ui.clip_allow->setSwitch(true);
+
+
+
+    //分辨率只允许输入0~9999整型
+    ui.lineEdit_Hpx->setValidator(new QIntValidator(0,9999));
+    ui.lineEdit_Vpx->setValidator(new QIntValidator(0,9999));
+
+    //初始化为RGB模式
+    ui.rgb_allow->setSwitch(true);
+    //rgb模式转换
+    connect(ui.rgb_allow,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_rgb_allow);
+
+    //视频翻转
+    connect(ui.xflip,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_des_flip);
+    connect(ui.yflip,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_des_flip);
+
+
+    //素描，存在功能冲突问题
+    connect(ui.sketch_allow,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_sketch_allow);
+
+    //去水印，存在功能冲突
+    connect(ui.dewater_mark_allow,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_dewater_mark_allow);
+    //人脸打码，。。。
+    connect(ui.mosaic_allow,&SwitchButton::sigSwitchChanged,this,&VideoUI::do_mosaic_allow);
+
     startTimer(40); // 可根据fps设置定时器的时间
+}
+
+void VideoUI::choosePage(int index){
+
+    QObject* p=sender();
+    TabButton* button=qobject_cast<TabButton*>(p);
+    //来自按钮的信号
+    if(button){
+        //原来功能区未隐藏，且点击了当前按钮，则隐藏功能区
+        if(TabButton::curIndex==index){
+            //第一个if理论上不会执行
+            if(!ui.stackedWidget->isVisible()){
+
+                //选中,由不可见变可见
+                //int width=ui.sideDock->widget()->width();
+
+                ui.stackedWidget->setVisible(!ui.stackedWidget->isVisible());
+                ui.sideDock->setMinimumWidth(dockWidth);
+                ui.sideDock->setMaximumWidth(999999);//恢复可以扩大宽度
+                this->resizeDocks({ui.sideDock},{dockWidth},Qt::Horizontal);
+                ui.line_2->setVisible(!ui.line->isVisible());
+                ui.sideDock->setMinimumWidth(TabButton::fixSize);//恢复可以缩小宽度
+                TabButton::curIndex=index;
+
+                /*ui.pushButton_2->setIcon(ui.pushButton_2->img[0]);
+                ui.pushButton_3->setIcon(ui.pushButton_3->img[0]);
+                ui.pushButton_4->setIcon(ui.pushButton_4->img[0]);*/
+                resetAllIcons(ui.gridLayout);
+                button->setIcon(button->img[2]);
+            }
+            else{
+                //取消选中，并隐藏功能区
+                ui.stackedWidget->setVisible(!ui.stackedWidget->isVisible());
+                ui.line_2->setVisible(false);
+                this->resizeDocks({ui.sideDock},{TabButton::fixSize+2},Qt::Horizontal);
+                //设置成不可再改变宽度
+                ui.sideDock->setFixedWidth(TabButton::fixSize+2);//2需要根据左边距和线的宽度计算。
+                //ui.sideDock->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetFloatable);
+                TabButton::curIndex=-1;
+                /*ui.pushButton_2->setIcon(ui.pushButton_2->img[0]);
+                ui.pushButton_3->setIcon(ui.pushButton_3->img[0]);
+                ui.pushButton_4->setIcon(ui.pushButton_4->img[0]);*/
+                resetAllIcons(ui.gridLayout);
+                button->setIcon(button->img[1]);//还原为悬浮图标
+            }
+
+            //ui.stackedWidget->setCurrentIndex(-1);无法设置为-1
+        }
+        //原来功能区已隐藏，则显示功能区
+        else if(TabButton::curIndex==-1){
+            //选中,由不可见变可见
+            //int width=ui.sideDock->widget()->width();
+
+            ui.stackedWidget->setVisible(true);
+            ui.stackedWidget->setCurrentIndex(index);
+            ui.sideDock->setMinimumWidth(dockWidth);
+            ui.sideDock->setMaximumWidth(999999);//恢复可以扩大宽度
+            this->resizeDocks({ui.sideDock},{dockWidth},Qt::Horizontal);
+            ui.line_2->setVisible(true);
+            ui.sideDock->setMinimumWidth(TabButton::fixSize);//恢复可以缩小宽度
+            TabButton::curIndex=index;
+
+            resetAllIcons(ui.gridLayout);
+            button->setIcon(button->img[2]);
+
+
+
+
+
+        }
+        //原来功能区未隐藏，点击了其它按钮，则切换功能区页面
+        else{
+            ui.sideDock->setMaximumWidth(999999);//恢复可以扩大宽度
+            ui.stackedWidget->setCurrentIndex(index);
+            ui.stackedWidget->setVisible(true);
+            ui.line_2->setVisible(true);
+            int width=ui.sideDock->widget()->width();//保持原来宽度
+            this->resizeDocks({ui.sideDock},{width},Qt::Horizontal);
+            //this->resizeDocks({ui.sideDock},{dockWidth},Qt::Horizontal);
+            TabButton::curIndex=index;
+            resetAllIcons(ui.gridLayout);
+            button->setIcon(button->img[2]);
+        }
+    }
+    //信号不是由按钮发出
+    else{
+        //参数为-1，取消选中，并隐藏功能区
+        if(index==-1){
+
+            ui.stackedWidget->setVisible(false);
+            ui.line_2->setVisible(false);
+            this->resizeDocks({ui.sideDock},{TabButton::fixSize+2},Qt::Horizontal);
+            //设置成不可再改变宽度
+            ui.sideDock->setFixedWidth(TabButton::fixSize+6);//6需要根据边距计算。
+            TabButton::curIndex=-1;
+            resetAllIcons(ui.gridLayout);
+        }
+        //参数非-1，显示对应功能页
+        else if(index>=0&&index<=4){
+            ui.stackedWidget->setVisible(true);
+            ui.stackedWidget->setCurrentIndex(index);
+            ui.sideDock->setMinimumWidth(dockWidth);
+            ui.sideDock->setMaximumWidth(999999);//恢复可以扩大宽度
+            this->resizeDocks({ui.sideDock},{dockWidth},Qt::Horizontal);
+            ui.line_2->setVisible(true);
+            ui.sideDock->setMinimumWidth(TabButton::fixSize);//恢复可以缩小宽度
+            TabButton::curIndex=index;
+
+            resetAllIcons(ui.gridLayout);
+            //button->setIcon(button->img[2]);
+            button=findTabButton(index,ui.gridLayout);
+            if(button){
+                button->setIcon(button->img[2]);
+            }
+
+        }
+    }
+
+
+
+}
+
+void VideoUI::resetAllIcons(QGridLayout *layout){
+    for (int i = 0; i < layout->count(); ++i) {
+        QLayoutItem* w = layout->itemAt(i);
+        if (w){
+            TabButton* button=qobject_cast<TabButton*>(w->widget());
+            if(button){
+                button->resetIcon();
+            }
+        }
+    }
+}
+
+TabButton* VideoUI::findTabButton(int index, QGridLayout *layout){
+    for (int i = 0; i < layout->count(); ++i) {
+        QLayoutItem* w = layout->itemAt(i);
+        if (w){
+            TabButton* button=qobject_cast<TabButton*>(w->widget());
+            if(button){
+                if(button->index()==index){
+                    return button;
+                }
+            }
+        }
+    }
+    return nullptr;
+}
+
+void VideoUI::changeStatus(QStatusBar *statusBar, QLabel *status){
+    //应当限制status是statusBar的标签。
+    QList<QLabel*> labels=statusBar->findChildren<QLabel*>();
+    for(auto label:labels){
+        label->setVisible(false);
+    }
+
+    if(status!=nullptr){
+
+        status->setVisible(true);
+    }
+    else{
+        //空
+    }
 }
 
 void VideoUI::timerEvent(QTimerEvent* e) {
@@ -137,6 +402,16 @@ void VideoUI::Play() {
         this->Left(0);
         VideoThread::Get()->Play();
         ui.playButton->hide();
+
+
+
+        changeStatus(ui.statusBar,playInfo);
+
+        ui.curFileName->setPlainText(QString::fromLocal8Bit(fileUrl));//防止乱码
+
+    }
+    else{
+        changeStatus(ui.statusBar,readyInfo);
     }
 }
 
@@ -144,8 +419,26 @@ void VideoUI::Pause() {
     ui.playButton->show();
     VideoThread::Get()->Pause();
     ui.pauseButton->hide();
+    changeStatus(ui.statusBar,pauseInfo);
 }
-
+void VideoUI::PlayOrPause(bool status){
+    if(VideoThread::Get()->isThreadOpen())
+    {
+        //ui.pauseButton->show();
+        //ui.pauseButton->setGeometry(ui.playButton->geometry());
+        if(status){
+            this->Right(999);
+            this->Left(0);
+            VideoThread::Get()->Play();
+            ui.playButton->setGeometry(ui.pauseButton->geometry());
+        }
+        else{
+            VideoThread::Get()->Pause();
+            //ui.playButton->setGeometry()
+        }
+        //ui.playButton->hide();
+    }
+}
 void VideoUI::SlidePress()
 {
     pressSlider = true;
@@ -319,17 +612,19 @@ void VideoUI::Export() {
         // 停止导出
         VideoThread::Get()->StopSave();
         isExport = false;
-       ui.action_export->setText("Export");
+       ui.action_export->setText("导出");
         return;
     }
     // 开始导出
-    QString name = QFileDialog::getSaveFileName(this, "Save", "out.avi"); // 先不考虑格式
+    QString name = QFileDialog::getSaveFileName(this, "导出为", "out.avi"); // 先不考虑格式
     if (name.isEmpty()) return;
     std::string filename = name.toLocal8Bit().data();
     int w = ui.width->value();
     int h = ui.height->value();
 
     cout << "UI's Export invoked! Filename: " << filename << endl;
+    //状态栏显示正在导出信息
+    changeStatus(ui.statusBar,exportInfo);
     if (VideoThread::Get()->StartSave(filename,w,h, isColor))
     {
         isExport = true;
@@ -341,7 +636,7 @@ void VideoUI::Export() {
 void VideoUI::ExportEnd() {
     isExport = false;
     //QString name = "Export";
-    ui.action_export->setText("Export");
+    ui.action_export->setText("导出");
     string src = VideoThread::Get()->srcFile;
     string des = VideoThread::Get()->desFile;
     int ss = 0;
@@ -356,6 +651,10 @@ void VideoUI::ExportEnd() {
     QFile::remove(tmp.c_str());
     QFile::rename(des.c_str(), tmp.c_str());
     AudioThread::Get()->Merge(tmp, src+".mp3", des);
+
+    //changeStatus(ui.statusBar);
+    //ui.statusBar->showMessage("导出成功",1000);无法判断是否取消导出，应该更改Export()函数有返回值
+    changeStatus(ui.statusBar,readyInfo);
 
 }
 
@@ -926,5 +1225,330 @@ void VideoUI::on_action_stream_triggered()
        this->Set();
        }
 
+}
+
+void VideoUI::hideLayout(QLayout *layout){
+    for (int i = 0; i < layout->count(); ++i) {
+       QLayoutItem* w = layout->itemAt(i);
+       if (w != nullptr){
+            if(w->widget()){
+                w->widget()->setVisible(false);
+            }
+            else if(w->layout()){
+                hideLayout(w->layout());
+            }
+       }
+    }
+}
+
+void VideoUI::enableLayout(QLayout *layout){
+    for (int i = 0; i < layout->count(); ++i) {
+       QLayoutItem* w = layout->itemAt(i);
+       if (w != nullptr){
+            if(w->widget()){
+                w->widget()->setVisible(true);
+            }
+            else if(w->layout()){
+                enableLayout(w->layout());
+            }
+       }
+    }
+}
+
+void VideoUI::setLayoutVisible(QLayout *layout, bool enable){
+    for (int i = 0; i < layout->count(); ++i) {
+       QLayoutItem* w = layout->itemAt(i);
+       if (w != nullptr){
+            if(w->widget()){
+                w->widget()->setVisible(enable);
+            }
+            else if(w->layout()){
+                setLayoutVisible(w->layout(),enable);
+            }
+       }
+    }
+}
+
+
+
+
+void VideoUI::on_double_video_triggered(bool checked)
+{
+    setLayoutVisible(ui.stackedLayout,checked);
+    if(checked){
+       ui.horizontalLayout_video->setStretch(0,1);
+    }
+    else{
+       ui.horizontalLayout_video->setStretch(0,0);
+
+    }
+    //接口代码有bug，暂无法实现
+}
+
+
+void VideoUI::on_action_open_2_triggered()
+{
+    this->Open();
+    if(cap1.isOpened()){
+       changeStatus(ui.statusBar,playInfo);
+       int width = cap1.get(CAP_PROP_FRAME_WIDTH);
+       int height = cap1.get(CAP_PROP_FRAME_HEIGHT);
+       //初始化分辨率、文件内容
+       ui.lineEdit_Hpx->setText(QString::number(width));
+       ui.lineEdit_Vpx->setText(QString::number(height));
+       ui.curFileName->setPlainText(QString::fromLocal8Bit(fileUrl));//防止乱码
+    }
+}
+
+
+void VideoUI::on_action_export_2_triggered()
+{
+    this->Export();
+    //this->ExportEnd();
+
+}
+
+
+void VideoUI::on_action_time_clip_triggered(bool checked)
+{
+    setLayoutVisible(ui.horizontalLayout_start_clip,checked);
+    setLayoutVisible(ui.horizontalLayout_end_clip,checked);
+}
+
+
+void VideoUI::on_openFileBtn_clicked()
+{
+    //this->Open();
+    on_action_open_2_triggered();
+}
+
+
+void VideoUI::on_exportFileBtn_clicked()
+{
+    //this->Export();
+    on_action_export_2_triggered();
+}
+
+
+void VideoUI::on_resetSizeBtn_clicked()
+{
+    //VideoFilter::Get()->Clear();
+    int width = cap1.get(CAP_PROP_FRAME_WIDTH);
+    int height = cap1.get(CAP_PROP_FRAME_HEIGHT);
+    int cx=0;
+    int cy=0;
+    int cw=width;
+    int ch=height;
+
+    ui.cx->setValue(cx);
+    ui.cy->setValue(cy);
+    ui.cw->setValue(cw);
+    ui.ch->setValue(ch);
+
+    this->Set();
+
+    isClip=false;
+}
+
+
+void VideoUI::on_confirmPxBtn_clicked()
+{
+    ui.width->setValue(ui.lineEdit_Hpx->text().toInt());
+    ui.height->setValue(ui.lineEdit_Vpx->text().toInt());
+    this->Set();
+}
+
+
+void VideoUI::on_resetPxBtn_clicked()
+{
+    int width = cap1.get(CAP_PROP_FRAME_WIDTH);
+    int height = cap1.get(CAP_PROP_FRAME_HEIGHT);
+    ui.lineEdit_Hpx->setText(QString::number(width));
+    ui.lineEdit_Vpx->setText(QString::number(height));
+    ui.width->setValue(width);
+    ui.height->setValue(height);
+    this->Set();
+}
+
+
+void VideoUI::on_rotate_currentIndexChanged(int index)
+{
+    Q_UNUSED(index);
+
+    this->Set();
+}
+
+void VideoUI::do_des_flip(bool checked){
+    Q_UNUSED(checked)
+
+    if(ui.xflip->getSwitch()&&ui.yflip->getSwitch()){
+       ui.flip->setCurrentIndex(3);
+    }
+    else if(ui.yflip->getSwitch()){
+       ui.flip->setCurrentIndex(1);
+    }
+    else if(ui.xflip->getSwitch()){
+       ui.flip->setCurrentIndex(2);
+
+    }
+    else{
+       ui.flip->setCurrentIndex(0);
+    }
+    this->Set();
+}
+
+
+void VideoUI::on_markBtn_clicked()
+{
+    if(!cap1.isOpened()){
+       return;
+    }
+
+    isMark = false;
+    QString name = QFileDialog::getOpenFileName(this, "选择图片");
+    if (name.isEmpty()) {
+        return;
+    }
+    std::string file = name.toLocal8Bit().data();
+    cv::Mat mark = cv::imread(file);
+    if (mark.empty()) return;
+
+
+
+    QDialog* markDialog=new QDialog();
+    //markDialog->setAttribute(Qt::WA_DeleteOnClose);
+
+    markDialog->setWindowTitle("请设置水印参数");
+    markDialog->setFixedHeight(200);
+    markDialog->setFixedWidth(300);
+
+    QVBoxLayout* layout=new QVBoxLayout(markDialog);
+    QSpinBox* spinBoxX;
+    QSpinBox* spinBoxY;
+    QDoubleSpinBox* spinBoxOpacity;
+    spinBoxX = new QSpinBox(markDialog);
+    spinBoxY = new QSpinBox(markDialog);
+    spinBoxOpacity = new QDoubleSpinBox(markDialog);
+    spinBoxOpacity->setMaximum(1.0);
+    spinBoxOpacity->setMinimum(0);
+    spinBoxOpacity->setSingleStep(0.1);
+    spinBoxOpacity->setValue(1.0);
+
+    spinBoxX->setMaximum(6000);
+    spinBoxX->setMinimum(0);
+    spinBoxY->setMaximum(6000);
+    spinBoxY->setMinimum(0);
+
+    spinBoxX->setValue(ui.mx->value());
+    spinBoxY->setValue(ui.my->value());
+    //spinBoxOpacity->setValue(ui.ma->value());
+
+    QFormLayout* form=new QFormLayout();
+    form->addRow("坐标X",spinBoxX);
+    form->addRow("坐标Y",spinBoxY);
+    form->addRow("不透明度",spinBoxOpacity);
+    layout->addLayout(form);
+
+    QPushButton* confirmBtn=new QPushButton("确认",markDialog);
+    QPushButton* cancelBtn=new QPushButton("取消", markDialog);
+
+    QHBoxLayout* buttons=new QHBoxLayout();
+
+    buttons->addWidget(confirmBtn);
+    buttons->addWidget(cancelBtn);
+
+    layout->addLayout(buttons);
+
+
+
+    connect(confirmBtn,SIGNAL(clicked()),markDialog,SLOT(accept()));
+    connect(cancelBtn,SIGNAL(clicked()),markDialog,SLOT(close()));
+
+    if(markDialog->exec()==QDialog::Accepted){
+        ui.mx->setValue(spinBoxX->value());
+        ui.my->setValue(spinBoxY->value());
+        ui.ma->setValue(spinBoxOpacity->value());
+        markDialog->close();
+        VideoThread::Get()->SetMark(mark);
+        isMark = true;
+        this->Set();
+    }
+    delete markDialog;
+}
+
+void VideoUI::do_rgb_allow(bool checked){
+    if(checked){
+        ui.color->setCurrentIndex(0);
+    }
+    else{
+        ui.color->setCurrentIndex(1);
+    }
+    this->Set();
+}
+
+//存在功能冲突，如果使用一个mosaic的话。
+void VideoUI::do_sketch_allow(bool checked)
+{
+    if(checked){
+        ui.mosaic->setCurrentIndex(2);
+    }
+    else{
+        ui.mosaic->setCurrentIndex(0);
+    }
+    this->Set();
+}
+
+//存在功能冲突
+void VideoUI::on_plugFlowBtn_clicked()
+{
+
+    if (!ui.plugFlowEdit->toPlainText().isEmpty()){
+        outUrl=ui.plugFlowEdit->toPlainText().toStdString();
+        qDebug("%s",outUrl);
+        ui.mosaic->setCurrentIndex(3);
+        this->Set();
+    }
+}
+
+
+void VideoUI::do_dewater_mark_allow(bool checked){
+    if(checked){
+        ui.mosaic->setCurrentIndex(4);
+    }
+    else{
+        ui.mosaic->setCurrentIndex(0);
+    }
+    this->Set();
+}
+void VideoUI::do_mosaic_allow(bool checked){
+    if(checked){
+        ui.mosaic->setCurrentIndex(1);
+    }
+    else{
+        ui.mosaic->setCurrentIndex(0);
+    }
+    this->Set();
+}
+
+
+
+
+void VideoUI::on_horizontalSlider_bright_sliderReleased()
+{
+    this->Set();
+}
+
+
+void VideoUI::on_horizontalSlider_contrast_sliderReleased()
+{
+    this->Set();
+}
+
+
+void VideoUI::on_resetPyBtn_clicked()
+{
+    ui.pyup->setValue(0);
+    ui.pydown->setValue(0);
+    this->Set();
 }
 
